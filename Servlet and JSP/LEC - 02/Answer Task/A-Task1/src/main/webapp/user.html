@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Info</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box;
+        font-family: Arial, sans-serif; }
+
+    body { background-color: #f4f4f4; height: 100vh;
+           display: flex; justify-content: center; align-items: center; }
+
+    form { background: white; padding: 30px; border-radius: 10px;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+
+    form input[type="text"],
+    form input[type="number"] { width: 100%; padding: 10px;
+           margin: 8px 0 15px; border: 1px solid #ccc; border-radius: 5px; }
+
+    form input[type="submit"] { width: 100%; padding: 10px;
+           background-color: #007bff; color: white; border: none;
+           border-radius: 5px; cursor: pointer; font-size: 16px; }
+
+    form input[type="submit"]:hover { background-color: #0056b3; }
+</style>
+
+</head>
+<body>
+
+    <form action="userResult.jsp" method="get">
+        <label>Full Name</label>
+        <input type="text" name="fullname">
+
+        <label>Age</label>
+        <input type="number" name="age">
+
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>
