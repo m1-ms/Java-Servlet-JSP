@@ -1,0 +1,244 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="model.Account, model.Transaction, java.util.List" %>
+<%
+    Account account = (Account) session.getAttribute("account");
+    if (account == null) { response.sendRedirect("login.jsp"); return; }
+    List<Transaction> transactions = (List<Transaction>) request.getAttribute("transactions");
+
+    double totalDeposited = 0, totalWithdrawn = 0;
+    int    transferCount  = 0;
+    if (transactions != null) {
+        for (Transaction tx : transactions) {
+            String t = tx.getType().toUpperCase();
+            if (t.equals("DEPOSIT") || t.equals("TRANSFER_IN"))  totalDeposited += tx.getAmount();
+            if (t.equals("WITHDRAW") || t.equals("TRANSFER_OUT")) totalWithdrawn += tx.getAmount();
+            if (t.startsWith("TRANSFER")) transferCount++;
+        }
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storm Cash — Transactions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F2F2F7; min-height: 100vh; display: flex; }
+
+    .sidebar { width: 216px; background: #FAFAFA; border-right: 1px solid rgba(0,0,0,0.07); display: flex; flex-direction: column; flex-shrink: 0; min-height: 100vh; position: fixed; top: 0; left: 0; bottom: 0; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 20px 18px 16px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .logo-mark { width: 30px; height: 30px; border-radius: 8px; background: #1C1C1E; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-mark svg { display: block; }
+    .brand-name { font-size: 14px; font-weight: 650; color: #1C1C1E; letter-spacing: -0.4px; }
+    .nav-section { padding: 14px 10px 4px; }
+    .nav-lbl { font-size: 10px; font-weight: 600; color: #C7C7CC; letter-spacing: 1px; text-transform: uppercase; padding: 0 8px; margin-bottom: 3px; display: block; }
+    .nav-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 10px; font-size: 13px; font-weight: 500; color: #3A3A3C; border-radius: 9px; cursor: pointer; border: none; background: none; font-family: 'Inter', sans-serif; text-align: left; text-decoration: none; transition: background 0.12s; margin-bottom: 1px; }
+    .nav-item i { font-size: 15px; color: #C7C7CC; width: 18px; text-align: center; flex-shrink: 0; }
+    .nav-item:hover { background: #F2F2F7; color: #1C1C1E; }
+    .nav-item:hover i { color: #6C6C70; }
+    .nav-item.active { background: #FFFFFF; color: #1C1C1E; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+    .nav-item.active i { color: #1C1C1E; }
+    .nav-item.danger { color: #FF3B30; }
+    .nav-item.danger i { color: #FFB3B0; }
+    .nav-item.danger:hover { background: #FFF2F1; }
+    .sidebar-footer { margin-top: auto; padding: 10px; border-top: 1px solid rgba(0,0,0,0.05); }
+    .user-row { display: flex; align-items: center; gap: 9px; padding: 8px; border-radius: 9px; }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #1C1C1E; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; }
+    .u-name { font-size: 12px; font-weight: 600; color: #1C1C1E; }
+    .u-role { font-size: 11px; color: #AEAEB2; }
+
+    .main { flex: 1; margin-left: 216px; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; background: rgba(242,242,247,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 10; }
+    .page-title { font-size: 17px; font-weight: 700; color: #1C1C1E; letter-spacing: -0.5px; }
+    .page-sub { font-size: 12px; color: #AEAEB2; margin-top: 1px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    .content { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* SUMMARY STRIP */
+    .strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+
+    .sum-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06); border-radius: 13px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); display: flex; align-items: center; gap: 13px; }
+    .sum-ic { width: 32px; height: 32px; border-radius: 9px; background: #F2F2F7; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #6C6C70; flex-shrink: 0; }
+    .sum-num { font-size: 16px; font-weight: 700; color: #1C1C1E; letter-spacing: -0.4px; }
+    .sum-lbl { font-size: 10px; color: #AEAEB2; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+    /* FILTERS + TABLE */
+    .table-wrap { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+
+    .tbl-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 11px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .tbl-title { font-size: 13px; font-weight: 650; color: #1C1C1E; }
+
+    .filters { display: flex; gap: 6px; }
+    .f-btn { padding: 5px 13px; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 7px; font-size: 11px; font-weight: 500; color: #6C6C70; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.12s; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+    .f-btn:hover { background: #F2F2F7; color: #1C1C1E; }
+    .f-btn.on { background: #1C1C1E; color: white; border-color: #1C1C1E; }
+
+    table.tx { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+    table.tx thead th { padding: 9px 16px; text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #C7C7CC; font-weight: 600; border-bottom: 1px solid rgba(0,0,0,0.05); background: #FAFAFA; }
+    table.tx tbody td { padding: 12px 16px; color: #1C1C1E; border-bottom: 1px solid rgba(0,0,0,0.04); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+    table.tx tbody tr:last-child td { border-bottom: none; }
+    table.tx tbody tr:hover td { background: #FAFAFA; }
+
+    .td-muted { color: #AEAEB2 !important; font-size: 11px; }
+
+    .tx-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
+    .b-dep  { background: #F0FAF4; color: #28B348; }
+    .b-wit  { background: #FFF1F0; color: #FF3B30; }
+    .b-out  { background: #F2F2F7; color: #6C6C70; }
+    .b-in   { background: #F0F5FF; color: #3470D8; }
+
+    .tx-amt { font-size: 13px; font-weight: 600; letter-spacing: -0.3px; }
+    .tx-amt.pos { color: #30D158; }
+    .tx-amt.neg { color: #FF3B30; }
+
+    .empty-state { text-align: center; padding: 40px; color: #AEAEB2; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <div class="logo-mark">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1.5L12 4.5V9.5L7 12.5L2 9.5V4.5L7 1.5Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="brand-name">Storm Cash</span>
+  </div>
+  <div class="nav-section">
+    <span class="nav-lbl">Menu</span>
+    <a href="DashboardController" class="nav-item"><i class="ti ti-home"></i> Dashboard</a>
+    <a href="WalletController?action=showDepositPage"      class="nav-item"><i class="ti ti-arrow-down-circle"></i> Deposit</a>
+    <a href="WalletController?action=showWithdrawPage"     class="nav-item"><i class="ti ti-arrow-up-circle"></i> Withdraw</a>
+    <a href="WalletController?action=showTransferPage"     class="nav-item"><i class="ti ti-transfer"></i> Transfer</a>
+    <a href="WalletController?action=showTransactionsPage" class="nav-item active"><i class="ti ti-history"></i> Transactions</a>
+  </div>
+  <div class="nav-section">
+    <span class="nav-lbl">Account</span>
+    <a href="AccountController?action=showProfilePage"        class="nav-item"><i class="ti ti-user"></i> Profile</a>
+    <a href="AccountController?action=showChangePasswordPage" class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
+    <a href="AccountController?action=showDeletePage"         class="nav-item danger"><i class="ti ti-trash"></i> Delete Account</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="avatar"><%= account.getFullName().substring(0,1).toUpperCase() %></div>
+      <div>
+        <div class="u-name"><%= account.getFullName().split(" ")[0] %></div>
+        <div class="u-role">User</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Transactions</div>
+      <div class="page-sub">Your full transaction history</div>
+    </div>
+    <div class="topbar-right">
+      <a href="AuthController?action=logout" style="display:flex;align-items:center;gap:5px;padding:6px 13px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.09);border-radius:8px;font-size:12px;font-weight:500;color:#3A3A3C;text-decoration:none;box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+        <i class="ti ti-logout" style="font-size:14px;color:#AEAEB2;"></i> Sign out
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STRIP -->
+    <div class="strip">
+      <div class="sum-card">
+        <div class="sum-ic"><i class="ti ti-arrow-down"></i></div>
+        <div>
+          <div class="sum-num">+<%= String.format("%,.2f", totalDeposited) %></div>
+          <div class="sum-lbl">Deposited</div>
+        </div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-ic"><i class="ti ti-arrow-up"></i></div>
+        <div>
+          <div class="sum-num">−<%= String.format("%,.2f", totalWithdrawn) %></div>
+          <div class="sum-lbl">Withdrawn</div>
+        </div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-ic"><i class="ti ti-transfer"></i></div>
+        <div>
+          <div class="sum-num"><%= transferCount %> times</div>
+          <div class="sum-lbl">Transfers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <div class="tbl-head">
+        <span class="tbl-title">All Transactions</span>
+        <div class="filters">
+          <button class="f-btn on" onclick="filterTx('all',this)">All</button>
+          <button class="f-btn" onclick="filterTx('dep',this)">Deposit</button>
+          <button class="f-btn" onclick="filterTx('wit',this)">Withdraw</button>
+          <button class="f-btn" onclick="filterTx('trf',this)">Transfer</button>
+        </div>
+      </div>
+
+      <% if (transactions == null || transactions.isEmpty()) { %>
+        <div class="empty-state">No transactions yet.</div>
+      <% } else { %>
+      <table class="tx">
+        <thead>
+          <tr>
+            <th style="width:5%;">#</th>
+            <th style="width:18%;">Type</th>
+            <th style="width:37%;">Details</th>
+            <th style="width:20%;text-align:right;">Amount</th>
+            <th style="width:20%;text-align:right;">Balance After</th>
+          </tr>
+        </thead>
+        <tbody id="tx-body">
+          <% int idx = 1; for (Transaction tx : transactions) {
+            String type = tx.getType().toUpperCase();
+            boolean isPos = type.equals("DEPOSIT") || type.equals("TRANSFER_IN");
+            String dataType = type.equals("DEPOSIT") ? "dep" : type.equals("WITHDRAW") ? "wit" : "trf";
+            String badgeClass = type.equals("DEPOSIT") ? "b-dep" : type.equals("WITHDRAW") ? "b-wit" : (type.equals("TRANSFER_IN") ? "b-in" : "b-out");
+            String displayType = type.replace("_", " ");
+          %>
+          <tr data-t="<%= dataType %>">
+            <td class="td-muted"><%= idx++ %></td>
+            <td><span class="tx-badge <%= badgeClass %>"><%= displayType %></span></td>
+            <td class="td-muted"><%= tx.getDescription() %></td>
+            <td style="text-align:right;">
+              <span class="tx-amt <%= isPos ? "pos" : "neg" %>">
+                <%= isPos ? "+" : "−" %><%= String.format("%,.2f", tx.getAmount()) %>
+              </span>
+            </td>
+            <td style="text-align:right;" class="td-muted"><%= String.format("%,.2f", tx.getBalanceAfter()) %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function filterTx(type, el) {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+    document.querySelectorAll('#tx-body tr').forEach(row => {
+      row.style.display = (type === 'all' || row.dataset.t === type) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

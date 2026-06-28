@@ -1,0 +1,167 @@
+# Project Item App Tasks
+
+## 1. Security
+
+* Search the project for all possible SQL Injection vulnerabilities.
+* Fix all SQL Injection issues by using parameterized queries, prepared statements, or ORM methods.
+
+---
+
+## 2. Code Refactoring
+
+### Item Controller
+
+* Remove duplicated code.
+* Refactor the controller to follow clean code principles.
+
+### Item Service Implementation
+
+* Remove duplicated code.
+* Refactor the service implementation to improve readability and maintainability.
+
+---
+
+## 3. Database Improvements
+
+Add appropriate database constraints for the `Item` table:
+
+* `id`
+
+  * Primary Key
+  * Not Null
+  * Auto Increment (if applicable)
+
+* `name`
+
+  * Not Null
+  * Unique
+  * Length validation
+
+* `price`
+
+  * Not Null
+  * Must be greater than 0
+
+* `totalNumber`
+
+  * Not Null
+  * Must be greater than or equal to 0
+
+---
+
+## 4. Error Handling
+
+* Create a generic error page.
+* Redirect users to the error page whenever any feature fails.
+* Display a meaningful error message.
+
+---
+
+## 5. Empty State
+
+* When no items exist, display a message such as:
+
+  * **"No items found."**
+
+---
+
+# Authentication
+
+## 6. Login
+
+* Create the Login frontend page.
+* Implement the Login feature.
+* After successful login, redirect the user to the Items page.
+
+## 7. Signup
+
+* Create the Signup frontend page.
+* Implement the Signup feature.
+* After successful signup, redirect the user to the Items page.
+
+## 8. Session Management
+
+* Apply HTTP Session for:
+
+  * Login
+  * Signup
+* Protect authenticated pages using session validation.
+
+## 9. Cookie Management
+
+* Apply Cookies for:
+
+  * Login
+  * Signup
+* Use cookies where appropriate to improve the authentication experience.
+
+## 10. Logout
+
+* Implement the Logout feature.
+* Clear the user's session.
+* Remove any authentication cookies.
+* Redirect the user to the Login page.
+
+---
+
+# Item Details (One-to-One Relationship)
+
+## 11. Database
+
+Create a new table:
+
+* `item_details`
+
+Relationship:
+
+* One Item → One Item Details (One-to-One)
+
+---
+
+## 12. Add Item Details
+
+* Add an **"Add Item Details"** button on the Show Items page.
+* Show the button **only if** the selected item does not already have details.
+
+---
+
+## 13. Update Item Details
+
+* Add an **"Update Item Details"** button.
+* Show the button only if the item already has details.
+
+---
+
+## 14. Delete Item Bug Fix
+
+Fix the delete functionality:
+
+* When deleting an Item:
+
+  * Check whether Item Details exist.
+  * Delete Item Details first (or configure Cascade Delete).
+  * Then delete the Item.
+
+---
+
+# Account Features
+
+## 15. Forgot Password
+
+Implement the Forgot Password feature.
+
+---
+
+## 16. Delete Account
+
+Implement the Delete Account feature, allowing authenticated users to permanently delete their account.
+
+---
+
+# Bonus (Optional)
+
+* Improve project structure using Clean Code principles.
+* Add input validation on both frontend and backend.
+* Handle all exceptions using Global Exception Handling.
+* Display user-friendly success and error messages.
+* Follow MVC best practices throughout the project.
