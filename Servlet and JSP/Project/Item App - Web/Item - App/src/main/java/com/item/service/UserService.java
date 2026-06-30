@@ -9,4 +9,7 @@ public interface UserService {
     
     boolean deleteAccount(long userID);
 
+    User verifyUser(String userName , String email , String phone);
+    boolean updatePassword(long userId , String newPassword);
+    
 }

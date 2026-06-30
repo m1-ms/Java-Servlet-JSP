@@ -177,6 +177,10 @@
         Sign in
       </button>
 
+	<p class="auth-link">
+  <a href="forgotPassword.jsp">Forgot your password?</a>
+</p>
+
     </form>
 
     <p class="auth-link">Don't have an account? <a href="signup.jsp">Sign up</a></p>

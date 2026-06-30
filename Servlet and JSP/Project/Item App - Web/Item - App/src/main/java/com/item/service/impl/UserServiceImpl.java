@@ -102,4 +102,56 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+    
+    
+    @Override
+    public User verifyUser(String username, String email, String phone) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            String query = "SELECT * FROM users WHERE username = ? AND email = ? AND phone = ?";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getLong("ID"),
+                    resultSet.getString("FIRST_NAME"),
+                    resultSet.getString("LAST_NAME"),
+                    resultSet.getString("USERNAME"),
+                    resultSet.getString("EMAIL"),
+                    resultSet.getString("PHONE"),
+                    resultSet.getString("PASSWORD")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Exception " + e.getMessage());
+        } finally {
+            closeResources(connection, ps, resultSet);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updatePassword(long userId, String newPassword) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = dataSource.getConnection();
+            String query = "UPDATE users SET password = ? WHERE id = ?";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, newPassword);
+            ps.setLong(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Exception " + e.getMessage());
+        } finally {
+            closeResources(connection, ps, null);
+        }
+        return false;
+    }
 }

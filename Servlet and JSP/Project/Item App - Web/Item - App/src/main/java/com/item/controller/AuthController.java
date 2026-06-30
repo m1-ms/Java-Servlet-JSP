@@ -38,6 +38,10 @@ public class AuthController extends HttpServlet {
             case "login":  login(request, response);  break;
             case "signup": signup(request, response); break;
             case "logout": logout(request, response); break;
+            
+            case "verifyUser":      verifyUser(request, response);      break;
+            case "resetPassword":   resetPassword(request, response);   break;
+            
             case "deleteAccount": deleteAccount(request, response); break;
             
             default:
@@ -157,6 +161,59 @@ public class AuthController extends HttpServlet {
         usernameCookie.setMaxAge(0);
         usernameCookie.setPath("/");
         response.addCookie(usernameCookie);
+
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+    }
+    
+    
+    // Verify User
+    private void verifyUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String email    = request.getParameter("email");
+        String phone    = request.getParameter("phone");
+
+        User user = userService.verifyUser(username, email, phone);
+
+        if (user == null) {
+            request.setAttribute("errorMessage", "No account found with these details.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("resetUserId", user.getId());
+
+        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+    }
+
+    // Reset Password
+    private void resetPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("resetUserId") == null) {
+            response.sendRedirect(request.getContextPath() + "/forgotPassword.jsp");
+            return;
+        }
+
+        String newPassword     = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("errorMessage", "Passwords do not match.");
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            return;
+        }
+
+        long userId = (long) session.getAttribute("resetUserId");
+        boolean success = userService.updatePassword(userId, newPassword);
+
+        if (!success) {
+            request.setAttribute("errorMessage", "Failed to reset password. Please try again.");
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            return;
+        }
+
+        session.removeAttribute("resetUserId");
 
         response.sendRedirect(request.getContextPath() + "/login.jsp");
     }

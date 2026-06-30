@@ -16,7 +16,7 @@
       min-height: 100vh;
       background: #f5f3ef;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       font-family: 'Inter', sans-serif;
       padding: 40px 24px;
