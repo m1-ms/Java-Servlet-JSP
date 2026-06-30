@@ -38,6 +38,8 @@ public class AuthController extends HttpServlet {
             case "login":  login(request, response);  break;
             case "signup": signup(request, response); break;
             case "logout": logout(request, response); break;
+            case "deleteAccount": deleteAccount(request, response); break;
+            
             default:
                 response.sendRedirect("login.jsp");
         }
@@ -121,6 +123,35 @@ public class AuthController extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
+
+        Cookie usernameCookie = new Cookie("rememberedUsername", "");
+        usernameCookie.setMaxAge(0);
+        usernameCookie.setPath("/");
+        response.addCookie(usernameCookie);
+
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+    }
+    
+    
+    // Delete Account
+    private void deleteAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        boolean success = userService.deleteAccount(loggedUser.getId());
+
+        if (!success) {
+            request.setAttribute("errorMessage", "Failed to delete account. Please try again.");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+            return;
+        }
+
+        session.invalidate();
 
         Cookie usernameCookie = new Cookie("rememberedUsername", "");
         usernameCookie.setMaxAge(0);

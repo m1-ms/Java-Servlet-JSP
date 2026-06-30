@@ -84,4 +84,22 @@ public class UserServiceImpl implements UserService {
             System.out.println("Exception closing resources: " + e.getMessage());
         }
     }
+    
+    
+    @Override
+    public boolean deleteAccount(long userId) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = dataSource.getConnection();
+            ps = connection.prepareStatement("DELETE FROM USERS WHERE ID = ?");
+            ps.setLong(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Exception " + e.getMessage());
+        } finally {
+            closeResources(connection, ps, null);
+        }
+        return false;
+    }
 }

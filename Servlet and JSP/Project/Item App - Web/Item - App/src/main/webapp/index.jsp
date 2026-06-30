@@ -137,7 +137,6 @@
       margin: 8px auto 0; border-radius: 2px;
     }
 
-    /* Logout Dialog Overlay */
     .overlay {
       display: none;
       position: fixed;
@@ -163,7 +162,6 @@
     .dialog-icon {
       width: 48px; height: 48px;
       border-radius: 12px;
-      background: #FAECE7; color: #993C1D;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px;
       margin: 0 auto 16px;
@@ -192,7 +190,7 @@
 
     .btn-cancel:hover { background: #f5f3ef; }
 
-    .btn-logout {
+    .btn-confirm {
       height: 38px; padding: 0 24px;
       border-radius: 8px; border: none;
       background: #C0392B; color: #fff;
@@ -204,7 +202,7 @@
       transition: opacity 0.2s;
     }
 
-    .btn-logout:hover { opacity: 0.88; }
+    .btn-confirm:hover { opacity: 0.88; }
 
     @media (max-width: 480px) {
       .features-grid { grid-template-columns: 1fr 1fr; }
@@ -213,8 +211,24 @@
 </head>
 <body>
 
-  <!-- Logout Button -->
-  <div style="position: fixed; top: 16px; right: 24px; z-index: 100;">
+  <!-- Top Buttons -->
+  <div style="position: fixed; top: 16px; right: 24px; z-index: 100; display:flex; gap:8px;">
+
+    <!-- Delete Account -->
+    <button onclick="document.getElementById('deleteAccountOverlay').classList.add('visible')" style="
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 13px; color: #888780;
+        font-family: 'Inter', sans-serif; font-weight: 500;
+        background: #fff;
+        border: 0.5px solid rgba(0,0,0,0.15);
+        border-radius: 8px; padding: 8px 16px;
+        cursor: pointer;
+    ">
+        <i class="ti ti-user-x" style="font-size:15px"></i>
+        Delete Account
+    </button>
+
+    <!-- Logout -->
     <button onclick="document.getElementById('logoutOverlay').classList.add('visible')" style="
         display: inline-flex; align-items: center; gap: 6px;
         font-size: 13px; color: #993C1D;
@@ -222,26 +236,48 @@
         background: #FAECE7;
         border: 0.5px solid rgba(216,90,48,0.2);
         border-radius: 8px; padding: 8px 16px;
-        cursor: pointer; transition: background 0.2s;
+        cursor: pointer;
     ">
         <i class="ti ti-logout" style="font-size:15px"></i>
         Logout
     </button>
   </div>
 
-  <!-- Logout Confirm Dialog -->
+  <!-- Logout Dialog -->
   <div id="logoutOverlay" class="overlay">
     <div class="dialog">
-      <div class="dialog-icon"><i class="ti ti-logout"></i></div>
+      <div class="dialog-icon" style="background:#FAECE7; color:#993C1D;">
+        <i class="ti ti-logout"></i>
+      </div>
       <p class="dialog-title">Logout</p>
       <p class="dialog-sub">Are you sure you want to logout?</p>
       <div class="dialog-actions">
         <button class="btn-cancel" onclick="document.getElementById('logoutOverlay').classList.remove('visible')">
           Cancel
         </button>
-        <a href="AuthController?action=logout" class="btn-logout">
+        <a href="AuthController?action=logout" class="btn-confirm">
           <i class="ti ti-logout" style="font-size:14px"></i>
           Yes, Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Account Dialog -->
+  <div id="deleteAccountOverlay" class="overlay">
+    <div class="dialog">
+      <div class="dialog-icon" style="background:#FAECE7; color:#993C1D;">
+        <i class="ti ti-user-x"></i>
+      </div>
+      <p class="dialog-title">Delete Account</p>
+      <p class="dialog-sub">Are you sure? This action cannot be undone and all your data will be permanently deleted.</p>
+      <div class="dialog-actions">
+        <button class="btn-cancel" onclick="document.getElementById('deleteAccountOverlay').classList.remove('visible')">
+          Cancel
+        </button>
+        <a href="AuthController?action=deleteAccount" class="btn-confirm">
+          <i class="ti ti-user-x" style="font-size:14px"></i>
+          Yes, Delete
         </a>
       </div>
     </div>
