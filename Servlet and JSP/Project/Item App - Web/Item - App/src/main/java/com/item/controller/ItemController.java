@@ -107,6 +107,8 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to add item. Please try again.");
             return;
         }
+        
+        request.getSession().setAttribute("successMessage", "Item Added successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 
@@ -122,6 +124,8 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to update item. Please try again.");
             return;
         }
+        
+        request.getSession().setAttribute("successMessage", "Item Update successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 
@@ -146,6 +150,8 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to delete item. Please try again.");
             return;
         }
+        
+        request.getSession().setAttribute("successMessage", "Item Deleted successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 
@@ -203,6 +209,8 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to add item details. Please try again.");
             return;
         }
+        
+        request.getSession().setAttribute("successMessage", "Item Detials Added successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 
@@ -217,6 +225,8 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to update item details. Please try again.");
             return;
         }
+        
+        request.getSession().setAttribute("successMessage", "Item Detials Update successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 }

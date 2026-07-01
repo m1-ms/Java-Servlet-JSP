@@ -4,6 +4,12 @@
         response.sendRedirect("login.jsp");
         return;
     }
+
+	String successMessage = (String) session.getAttribute("successMessage");
+	if (successMessage != null) {
+	    session.removeAttribute("successMessage");
+	}
+
 %>
 
 <!DOCTYPE html>
@@ -214,6 +220,28 @@
   <!-- Top Buttons -->
   <div style="position: fixed; top: 16px; right: 24px; z-index: 100; display:flex; gap:8px;">
 
+
+	<% if (successMessage != null) { %>
+	  <div style="
+	    position: fixed; top: 60px; right: 24px;
+	    background: #E1F5EE;
+	    border: 0.5px solid rgba(29,158,117,0.3);
+	    border-radius: 10px;
+	    padding: 12px 16px;
+	    font-size: 13px;
+	    color: #0F6E56;
+	    display: flex;
+	    align-items: center;
+	    gap: 8px;
+	    z-index: 100;
+	    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+	    animation: fadeIn 0.3s ease;
+	  ">
+	    <i class="ti ti-circle-check" style="font-size:16px"></i>
+	    <%= successMessage %>
+	  </div>
+	<% } %>
+
     <!-- Delete Account -->
     <button onclick="document.getElementById('deleteAccountOverlay').classList.add('visible')" style="
         display: inline-flex; align-items: center; gap: 6px;
@@ -294,7 +322,7 @@
 
     <div class="features-grid">
 
-      <a class="feature-card" href="addItem.html">
+      <a class="feature-card" href="addItem.jsp">
         <div class="icon-wrap icon-purple"><i class="ti ti-plus"></i></div>
         <div>
           <div class="divider" style="background:#a78bfa"></div>

@@ -5,7 +5,13 @@
 <%
 List<Item> items = (List<Item>) request.getAttribute("itemsData");
 List<Long> itemsWithDetails = (List<Long>) request.getAttribute("itemsWithDetails");
+
+String successMessage = (String) session.getAttribute("successMessage");
+if (successMessage != null) {
+    session.removeAttribute("successMessage");
+}
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -138,18 +144,47 @@ List<Long> itemsWithDetails = (List<Long>) request.getAttribute("itemsWithDetail
       thead th, tbody td { padding: 12px 12px; }
       .btn-edit, .btn-delete { padding: 0 10px; }
     }
+    
+    
+	    .success-msg {
+	  background: #E1F5EE;
+	  border: 0.5px solid rgba(29,158,117,0.3);
+	  border-radius: 10px;
+	  padding: 12px 16px;
+	  margin-bottom: 20px;
+	  font-size: 13px;
+	  color: #0F6E56;
+	  display: flex;
+	  align-items: center;
+	  gap: 8px;
+	  animation: fadeIn 0.3s ease;
+	}
+	
+	@keyframes fadeIn {
+	  from { opacity: 0; transform: translateY(-8px); }
+	  to   { opacity: 1; transform: translateY(0); }
+	}
+	    
+    
   </style>
 </head>
 <body>
 
   <div class="wrapper">
 
+	<% if (successMessage != null) { %>
+	  <div class="success-msg">
+	    <i class="ti ti-circle-check" style="font-size:18px"></i>
+	    <%= successMessage %>
+	  </div>
+	<% } %>
+
     <div class="page-header">
       <div class="header-left">
         <div class="page-icon"><i class="ti ti-layout-list"></i></div>
         <h1 class="page-title">All <span>Items</span></h1>
       </div>
-      <a href="addItem.html" class="btn-add">
+      <a href="addItem.jsp" class="btn-add">
         <i class="ti ti-plus" style="font-size:15px"></i>
         Add item
       </a>

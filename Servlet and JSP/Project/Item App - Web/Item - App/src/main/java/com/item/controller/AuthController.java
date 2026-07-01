@@ -76,6 +76,7 @@ public class AuthController extends HttpServlet {
         usernameCookie.setPath("/");
         response.addCookie(usernameCookie);
 
+        session.setAttribute("successMessage", "Welcome back! 👋");
         // Redirect
         response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
@@ -117,6 +118,8 @@ public class AuthController extends HttpServlet {
         usernameCookie.setPath("/");
         response.addCookie(usernameCookie);
 
+        HttpSession newSession = request.getSession();
+        newSession.setAttribute("successMessage", "Account created successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
     
@@ -183,6 +186,7 @@ public class AuthController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("resetUserId", user.getId());
 
+        session.setAttribute("successMessage", "Verify Account Done 👋");
         request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
     }
 
@@ -215,6 +219,8 @@ public class AuthController extends HttpServlet {
 
         session.removeAttribute("resetUserId");
 
+        HttpSession resetSession = request.getSession();
+        resetSession.setAttribute("successMessage", "Password reset successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 }

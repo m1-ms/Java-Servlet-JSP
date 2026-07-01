@@ -7,6 +7,12 @@
     }
 
 	
+	String successMessage = (String) session.getAttribute("successMessage");
+	if (successMessage != null) {
+	    session.removeAttribute("successMessage");
+	}
+
+
 	String rememberedUserName = "";
 	Cookie[] cookies = request.getCookies();
 	
@@ -138,11 +144,38 @@
 
     .auth-link a { color: #534AB7; text-decoration: none; font-weight: 500; }
     .auth-link a:hover { text-decoration: underline; }
+    
+	  .success-msg {
+	  background: #E1F5EE;
+	  border: 0.5px solid rgba(29,158,117,0.3);
+	  border-radius: 8px;
+	  padding: 10px 14px;
+	  margin-bottom: 16px;
+	  font-size: 12px;
+	  color: #0F6E56;
+	  display: flex;
+	  align-items: center;
+	  gap: 8px;
+	  animation: fadeIn 0.3s ease;
+	}
+	
+	@keyframes fadeIn {
+	  from { opacity: 0; transform: translateY(-8px); }
+	  to   { opacity: 1; transform: translateY(0); }
+	}
+    
   </style>
 </head>
 <body>
 
   <div class="card">
+
+	<% if (successMessage != null) { %>
+	  <div class="success-msg">
+	    <i class="ti ti-circle-check" style="font-size:16px"></i>
+	    <%= successMessage %>
+	  </div>
+	<% } %>
 
     <div class="card-top">
       <div class="card-icon"><i class="ti ti-lock"></i></div>
