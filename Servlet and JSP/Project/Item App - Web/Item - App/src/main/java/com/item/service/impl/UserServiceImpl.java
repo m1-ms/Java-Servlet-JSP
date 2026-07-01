@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
+import com.item.exception.DatabaseException;
 import com.item.model.User;
 import com.item.service.UserService;
 
@@ -35,11 +36,10 @@ public class UserServiceImpl implements UserService {
             ps.setString(6, user.getPassword());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to signup", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
     
     
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to login", e);
         } finally {
             closeResources(connection, ps, resultSet);
         }
@@ -96,11 +96,10 @@ public class UserServiceImpl implements UserService {
             ps.setLong(1, userId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to delete account", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
     
     
@@ -129,7 +128,7 @@ public class UserServiceImpl implements UserService {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to verify user", e);
         } finally {
             closeResources(connection, ps, resultSet);
         }
@@ -148,10 +147,9 @@ public class UserServiceImpl implements UserService {
             ps.setLong(2, userId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to update password", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 }

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import com.item.exception.DatabaseException;
 import com.item.model.Item;
 import com.item.model.ItemDetail;
 import com.item.service.ItemService;
@@ -45,20 +46,25 @@ public class ItemController extends HttpServlet {
     	String action = request.getParameter("action");
         if (Objects.isNull(action)) action = "showItems";
 
-        switch (action) {
-            case "showItems":      showItems(request, response);      break;
-            case "showItem":       showItem(request, response);       break;
-            case "addItem":        addItem(request, response);        break;
-            case "updateItem":     updateItem(request, response);     break;
-            case "showUpdatePage": showUpdatePage(request, response); break;
-            case "deleteItem":     deleteItem(request, response);     break;
-            case "showDeletePage": showDeletePage(request, response); break;
-            
-            case "addItemDetail":    addItemDetail(request, response);    break;
-            case "updateItemDetail": updateItemDetail(request, response); break;
-            case "showAddDetailPage":    showAddDetailPage(request, response);    break;
-            case "showUpdateDetailPage": showUpdateDetailPage(request, response); break;
-            default:               showItems(request, response);
+        try {
+            switch (action) {
+                case "showItems":            showItems(request, response);            break;
+                case "showItem":             showItem(request, response);             break;
+                case "addItem":              addItem(request, response);              break;
+                case "updateItem":           updateItem(request, response);           break;
+                case "showUpdatePage":       showUpdatePage(request, response);       break;
+                case "deleteItem":           deleteItem(request, response);           break;
+                case "showDeletePage":       showDeletePage(request, response);       break;
+                case "addItemDetail":        addItemDetail(request, response);        break;
+                case "updateItemDetail":     updateItemDetail(request, response);     break;
+                case "showAddDetailPage":    showAddDetailPage(request, response);    break;
+                case "showUpdateDetailPage": showUpdateDetailPage(request, response); break;
+                default:                     showItems(request, response);
+            }
+        } catch (DatabaseException e) {
+            handleError(request, response, e.getMessage());
+        } catch (Exception e) {
+            handleError(request, response, "An unexpected error occurred. Please try again.");
         }
     }
 

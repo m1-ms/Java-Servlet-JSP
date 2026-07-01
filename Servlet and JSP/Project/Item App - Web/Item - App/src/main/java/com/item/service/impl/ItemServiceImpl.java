@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
+import com.item.exception.DatabaseException;
 import com.item.model.Item;
 import com.item.model.ItemDetail;
 import com.item.service.ItemService;
@@ -39,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
                 return new Item(id, name, price, totalNumber);
             }
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to get item", e);
         } finally {
             closeResources(connection, ps, resultSet);
         }
@@ -56,11 +57,10 @@ public class ItemServiceImpl implements ItemService {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to delete item", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 
     @Override
@@ -75,11 +75,10 @@ public class ItemServiceImpl implements ItemService {
             ps.setInt(3, item.getTotalNumber());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to add item", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 
     @Override
@@ -95,11 +94,10 @@ public class ItemServiceImpl implements ItemService {
             ps.setLong(4, item.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to update item", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 
     @Override
@@ -121,11 +119,10 @@ public class ItemServiceImpl implements ItemService {
             }
             return items;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to get items", e);
         } finally {
             closeResources(connection, ps, resultSet);
         }
-        return null;
     }
 
     // Helper method
@@ -160,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to get item details", e);
         } finally {
             closeResources(connection, ps, resultSet);
         }
@@ -179,11 +176,10 @@ public class ItemServiceImpl implements ItemService {
             ps.setString(3, itemDetail.getManufacturer());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to add item details", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 
     @Override
@@ -198,10 +194,9 @@ public class ItemServiceImpl implements ItemService {
             ps.setLong(3, itemDetail.getItemId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
+        	throw new DatabaseException("Failed to update item details", e);
         } finally {
             closeResources(connection, ps, null);
         }
-        return false;
     }
 }

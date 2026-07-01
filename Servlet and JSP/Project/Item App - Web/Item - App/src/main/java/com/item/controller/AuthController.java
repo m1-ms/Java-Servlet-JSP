@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import com.item.exception.DatabaseException;
 import com.item.model.User;
 import com.item.service.UserService;
 import com.item.service.impl.UserServiceImpl;
@@ -34,18 +35,23 @@ public class AuthController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        switch (action) {
-            case "login":  login(request, response);  break;
-            case "signup": signup(request, response); break;
-            case "logout": logout(request, response); break;
-            
-            case "verifyUser":      verifyUser(request, response);      break;
-            case "resetPassword":   resetPassword(request, response);   break;
-            
-            case "deleteAccount": deleteAccount(request, response); break;
-            
-            default:
-                response.sendRedirect("login.jsp");
+        try {
+            switch (action) {
+                case "login":         login(request, response);         break;
+                case "signup":        signup(request, response);        break;
+                case "logout":        logout(request, response);        break;
+                case "deleteAccount": deleteAccount(request, response); break;
+                case "verifyUser":    verifyUser(request, response);    break;
+                case "resetPassword": resetPassword(request, response); break;
+                default:
+                    response.sendRedirect("login.jsp");
+            }
+        } catch (DatabaseException e) {
+            request.setAttribute("errorMessage", e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
