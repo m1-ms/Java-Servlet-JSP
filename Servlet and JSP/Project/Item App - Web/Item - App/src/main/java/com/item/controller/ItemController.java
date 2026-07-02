@@ -105,13 +105,46 @@ public class ItemController extends HttpServlet {
     
     // Add Item
     private void addItem(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name     = request.getParameter("name");
+        String priceStr = request.getParameter("price");
+        String totalStr = request.getParameter("totalNumber");
+
+        if (name == null || name.trim().isEmpty()) {
+            handleError(request, response, "Item name is required."); return;
+        }
+        if (priceStr == null || priceStr.trim().isEmpty()) {
+            handleError(request, response, "Item price is required."); return;
+        }
+        if (totalStr == null || totalStr.trim().isEmpty()) {
+            handleError(request, response, "Total number is required."); return;
+        }
+
+        double price;
+        int totalNumber;
+        try {
+            price = Double.parseDouble(priceStr);
+            if (price <= 0) {
+                handleError(request, response, "Price must be greater than 0."); return;
+            }
+        } catch (NumberFormatException e) {
+            handleError(request, response, "Invalid price format."); return;
+        }
+        try {
+            totalNumber = Integer.parseInt(totalStr);
+            if (totalNumber < 0) {
+                handleError(request, response, "Total number must be 0 or greater."); return;
+            }
+        } catch (NumberFormatException e) {
+            handleError(request, response, "Invalid total number format."); return;
+        }
+
         Item newItem = new Item();
-        newItem.setName(request.getParameter("name"));
-        newItem.setPrice(Double.parseDouble(request.getParameter("price")));
-        newItem.setTotalNumber(Integer.parseInt(request.getParameter("totalNumber")));
+        newItem.setName(name.trim());
+        newItem.setPrice(price);
+        newItem.setTotalNumber(totalNumber);
+
         if (!itemService.addItem(newItem)) {
-            handleError(request, response, "Failed to add item. Please try again.");
-            return;
+            handleError(request, response, "Failed to add item. Please try again."); return;
         }
         
         request.getSession().setAttribute("successMessage", "Item Added successfully! ✅");
@@ -121,14 +154,51 @@ public class ItemController extends HttpServlet {
     
     // Update Item
     private void updateItem(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idStr    = request.getParameter("id");
+        String name     = request.getParameter("name");
+        String priceStr = request.getParameter("price");
+        String totalStr = request.getParameter("totalNumber");
+
+        if (idStr == null || idStr.trim().isEmpty()) {
+            handleError(request, response, "Item ID is required."); return;
+        }
+        if (name == null || name.trim().isEmpty()) {
+            handleError(request, response, "Item name is required."); return;
+        }
+        if (priceStr == null || priceStr.trim().isEmpty()) {
+            handleError(request, response, "Item price is required."); return;
+        }
+        if (totalStr == null || totalStr.trim().isEmpty()) {
+            handleError(request, response, "Total number is required."); return;
+        }
+
+        double price;
+        int totalNumber;
+        try {
+            price = Double.parseDouble(priceStr);
+            if (price <= 0) {
+                handleError(request, response, "Price must be greater than 0."); return;
+            }
+        } catch (NumberFormatException e) {
+            handleError(request, response, "Invalid price format."); return;
+        }
+        try {
+            totalNumber = Integer.parseInt(totalStr);
+            if (totalNumber < 0) {
+                handleError(request, response, "Total number must be 0 or greater."); return;
+            }
+        } catch (NumberFormatException e) {
+            handleError(request, response, "Invalid total number format."); return;
+        }
+
         Item updatedItem = new Item();
-        updatedItem.setId(Long.parseLong(request.getParameter("id")));
-        updatedItem.setName(request.getParameter("name"));
-        updatedItem.setPrice(Double.parseDouble(request.getParameter("price")));
-        updatedItem.setTotalNumber(Integer.parseInt(request.getParameter("totalNumber")));
+        updatedItem.setId(Long.parseLong(idStr));
+        updatedItem.setName(name.trim());
+        updatedItem.setPrice(price);
+        updatedItem.setTotalNumber(totalNumber);
+
         if (!itemService.updateItem(updatedItem)) {
-            handleError(request, response, "Failed to update item. Please try again.");
-            return;
+            handleError(request, response, "Failed to update item. Please try again."); return;
         }
         
         request.getSession().setAttribute("successMessage", "Item Update successfully! ✅");
@@ -207,13 +277,27 @@ public class ItemController extends HttpServlet {
     
     // Add Item Detail
     private void addItemDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String itemIdStr     = request.getParameter("itemId");
+        String description   = request.getParameter("description");
+        String manufacturer  = request.getParameter("manufacturer");
+
+        if (itemIdStr == null || itemIdStr.trim().isEmpty()) {
+            handleError(request, response, "Item ID is required."); return;
+        }
+        if (description == null || description.trim().isEmpty()) {
+            handleError(request, response, "Description is required."); return;
+        }
+        if (manufacturer == null || manufacturer.trim().isEmpty()) {
+            handleError(request, response, "Manufacturer is required."); return;
+        }
+
         ItemDetail itemDetail = new ItemDetail();
-        itemDetail.setItemId(Long.parseLong(request.getParameter("itemId")));
-        itemDetail.setDescription(request.getParameter("description"));
-        itemDetail.setManufacturer(request.getParameter("manufacturer"));
+        itemDetail.setItemId(Long.parseLong(itemIdStr));
+        itemDetail.setDescription(description.trim());
+        itemDetail.setManufacturer(manufacturer.trim());
+
         if (!itemService.addItemDetail(itemDetail)) {
-            handleError(request, response, "Failed to add item details. Please try again.");
-            return;
+            handleError(request, response, "Failed to add item details. Please try again."); return;
         }
         
         request.getSession().setAttribute("successMessage", "Item Detials Added successfully! ✅");
@@ -223,13 +307,27 @@ public class ItemController extends HttpServlet {
     
     // Update Item Detail
     private void updateItemDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String itemIdStr     = request.getParameter("itemId");
+        String description   = request.getParameter("description");
+        String manufacturer  = request.getParameter("manufacturer");
+
+        if (itemIdStr == null || itemIdStr.trim().isEmpty()) {
+            handleError(request, response, "Item ID is required."); return;
+        }
+        if (description == null || description.trim().isEmpty()) {
+            handleError(request, response, "Description is required."); return;
+        }
+        if (manufacturer == null || manufacturer.trim().isEmpty()) {
+            handleError(request, response, "Manufacturer is required."); return;
+        }
+
         ItemDetail itemDetail = new ItemDetail();
-        itemDetail.setItemId(Long.parseLong(request.getParameter("itemId")));
-        itemDetail.setDescription(request.getParameter("description"));
-        itemDetail.setManufacturer(request.getParameter("manufacturer"));
+        itemDetail.setItemId(Long.parseLong(itemIdStr));
+        itemDetail.setDescription(description.trim());
+        itemDetail.setManufacturer(manufacturer.trim());
+
         if (!itemService.updateItemDetail(itemDetail)) {
-            handleError(request, response, "Failed to update item details. Please try again.");
-            return;
+            handleError(request, response, "Failed to update item details. Please try again."); return;
         }
         
         request.getSession().setAttribute("successMessage", "Item Detials Update successfully! ✅");

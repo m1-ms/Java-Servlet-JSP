@@ -225,5 +225,36 @@
 
   </div>
 
+
+	<script>
+	document.querySelector('form').addEventListener('submit', function(e) {
+	    const firstName = document.getElementById('firstName').value.trim();
+	    const lastName  = document.getElementById('lastName').value.trim();
+	    const username  = document.getElementById('username').value.trim();
+	    const email     = document.getElementById('email').value.trim();
+	    const password  = document.getElementById('password').value.trim();
+	    const confirm   = document.getElementById('confirmPassword').value.trim();
+	
+	    if (!firstName || !/^[A-Za-z]{3,}$/.test(firstName)) {
+	        alert('First name must be at least 3 letters!'); e.preventDefault(); return;
+	    }
+	    if (!lastName || !/^[A-Za-z]{3,}$/.test(lastName)) {
+	        alert('Last name must be at least 3 letters!'); e.preventDefault(); return;
+	    }
+	    if (!username || username.length < 3) {
+	        alert('Username must be at least 3 characters!'); e.preventDefault(); return;
+	    }
+	    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+	        alert('Please enter a valid email!'); e.preventDefault(); return;
+	    }
+	    if (!password || password.length < 6) {
+	        alert('Password must be at least 6 characters!'); e.preventDefault(); return;
+	    }
+	    if (password !== confirm) {
+	        alert('Passwords do not match!'); e.preventDefault(); return;
+	    }
+	});
+	</script>
+
 </body>
 </html>

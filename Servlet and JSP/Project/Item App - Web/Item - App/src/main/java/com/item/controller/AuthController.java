@@ -64,17 +64,25 @@ public class AuthController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        User user = userService.login(username, password);
-
-        if (user == null) {
-            request.setAttribute("errorMessage", "Invalid username or password.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
+        if (username == null || username.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Username is required.");
+            request.getRequestDispatcher("login.jsp").forward(request, response); return;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Password is required.");
+            request.getRequestDispatcher("login.jsp").forward(request, response); return;
         }
 
-        // Session
+        User user = userService.login(username.trim(), password);
+        if (user == null) {
+            request.setAttribute("errorMessage", "Invalid username or password.");
+            request.getRequestDispatcher("login.jsp").forward(request, response); return;
+        }
+
         HttpSession session = request.getSession();
         session.setAttribute("loggedUser", user);
+        session.setAttribute("successMessage", "Welcome back, " + user.getFirstName() + "! 👋");
+
 
         // Cookie
         Cookie usernameCookie = new Cookie("rememberedUsername", username);
@@ -97,26 +105,46 @@ public class AuthController extends HttpServlet {
         String password    = request.getParameter("password");
         String confirmPass = request.getParameter("confirmPassword");
 
+        if (firstName == null || firstName.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "First name is required.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
+        if (lastName == null || lastName.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Last name is required.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
+        if (username == null || username.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Username is required.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Email is required.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Password is required.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
+        if (password.length() < 6) {
+            request.setAttribute("errorMessage", "Password must be at least 6 characters.");
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
+        }
         if (!password.equals(confirmPass)) {
             request.setAttribute("errorMessage", "Passwords do not match.");
-            request.getRequestDispatcher("signup.jsp").forward(request, response);
-            return;
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
         }
 
         User newUser = new User();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setUserName(username);
-        newUser.setEmail(email);
+        newUser.setFirstName(firstName.trim());
+        newUser.setLastName(lastName.trim());
+        newUser.setUserName(username.trim());
+        newUser.setEmail(email.trim());
         newUser.setPhone(phone);
         newUser.setPassword(password);
 
-        boolean success = userService.signup(newUser);
-
-        if (!success) {
+        if (!userService.signup(newUser)) {
             request.setAttribute("errorMessage", "Signup failed. Username or email may already exist.");
-            request.getRequestDispatcher("signup.jsp").forward(request, response);
-            return;
+            request.getRequestDispatcher("signup.jsp").forward(request, response); return;
         }
 
         Cookie usernameCookie = new Cookie("rememberedUsername", username);

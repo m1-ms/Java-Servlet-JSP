@@ -258,5 +258,27 @@
 
   </div>
 
+	<script>
+	document.querySelector('form').addEventListener('submit', function(e) {
+	    const name  = document.getElementById('name').value.trim();
+	    const price = document.getElementById('price').value.trim();
+	    const total = document.getElementById('totalNumber').value.trim();
+	
+	    if (!name) {
+	        alert('Item name is required!'); e.preventDefault(); return;
+	    }
+	    if (!/^[A-Za-z ]{3,}$/.test(name)) {
+	        alert('Name must be at least 3 letters!'); e.preventDefault(); return;
+	    }
+	    if (!price || isNaN(price) || parseFloat(price) <= 0) {
+	        alert('Price must be a number greater than 0!'); e.preventDefault(); return;
+	    }
+	    if (!total || isNaN(total) || parseInt(total) < 0) {
+	        alert('Total number must be 0 or greater!'); e.preventDefault(); return;
+	    }
+	});
+	</script>
+
+
 </body>
 </html>
