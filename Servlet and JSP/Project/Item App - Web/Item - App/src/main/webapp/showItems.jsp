@@ -33,7 +33,7 @@ if (successMessage != null) {
       padding: 40px 24px;
     }
 
-    .wrapper { width: 100%; max-width: 900px; margin: 0 auto; }
+    .wrapper { width: 100%; max-width: 1200px; margin: 0 auto; }
 
     .page-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -165,6 +165,23 @@ if (successMessage != null) {
 	  to   { opacity: 1; transform: translateY(0); }
 	}
 	    
+	.btn-detail-show {
+    height: 32px; padding: 0 14px; border-radius: 6px;
+    border: 0.5px solid rgba(0,0,0,0.15); background: #EEF2FF; color: #3B4ED8;
+    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+    text-decoration: none; transition: background 0.15s;
+	}
+	.btn-detail-show:hover { background: #C7D2FE; }
+	
+	.btn-detail-delete {
+	    height: 32px; padding: 0 14px; border-radius: 6px;
+	    border: 0.5px solid rgba(0,0,0,0.15); background: #FEE2E2; color: #991B1B;
+	    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+	    cursor: pointer; display: flex; align-items: center; gap: 5px;
+	    text-decoration: none; transition: background 0.15s;
+	}
+	.btn-detail-delete:hover { background: #FECACA; }
     
   </style>
 </head>
@@ -219,23 +236,30 @@ if (successMessage != null) {
                 <td class="td-price">$<%= item.getPrice() %></td>
                 <td class="td-total"><%= item.getTotalNumber() %></td>
                 <td>
-                  <div class="actions-cell">
-                    <a href="ItemController?action=showUpdatePage&id=<%= item.getId() %>" class="btn-edit">
-                      <i class="ti ti-edit" style="font-size:13px"></i> Edit
-                    </a>
-                    <a href="ItemController?action=showDeletePage&id=<%= item.getId() %>" class="btn-delete">
-                      <i class="ti ti-trash" style="font-size:13px"></i> Delete
-                    </a>
-                    <% if (itemsWithDetails != null && itemsWithDetails.contains(item.getId())) { %>
-                      <a href="ItemController?action=showUpdateDetailPage&id=<%= item.getId() %>" class="btn-detail-update">
-                        <i class="ti ti-file-pencil" style="font-size:13px"></i> Update Details
-                      </a>
-                    <% } else { %>
-                      <a href="ItemController?action=showAddDetailPage&id=<%= item.getId() %>" class="btn-detail-add">
-                        <i class="ti ti-file-plus" style="font-size:13px"></i> Add Details
-                      </a>
-                    <% } %>
-                  </div>
+				<div class="actions-cell">
+				    <a href="ItemController?action=showUpdatePage&id=<%= item.getId() %>" class="btn-edit">
+				        <i class="ti ti-edit" style="font-size:13px"></i> Edit
+				    </a>
+				    <a href="ItemController?action=showDeletePage&id=<%= item.getId() %>" class="btn-delete">
+				        <i class="ti ti-trash" style="font-size:13px"></i> Delete
+				    </a>
+				    <% if (itemsWithDetails != null && itemsWithDetails.contains(item.getId())) { %>
+				        <a href="ItemController?action=showDetailPage&id=<%= item.getId() %>" class="btn-detail-show">
+				            <i class="ti ti-eye" style="font-size:13px"></i> Show Details
+				        </a>
+				        <a href="ItemController?action=showUpdateDetailPage&id=<%= item.getId() %>" class="btn-detail-update">
+				            <i class="ti ti-file-pencil" style="font-size:13px"></i> Update Details
+				        </a>
+				        <a href="#" class="btn-detail-delete"
+  							 onclick="showDeleteDetailDialog('<%= item.getId() %>', '<%= item.getName() %>')">
+				            <i class="ti ti-file-minus" style="font-size:13px"></i> Delete Details
+				        </a>
+				    <% } else { %>
+				        <a href="ItemController?action=showAddDetailPage&id=<%= item.getId() %>" class="btn-detail-add">
+				            <i class="ti ti-file-plus" style="font-size:13px"></i> Add Details
+				        </a>
+				    <% } %>
+				</div>
                 </td>
               </tr>
             <% } %>
@@ -252,6 +276,70 @@ if (successMessage != null) {
     </div>
 
   </div>
+
+
+		<!-- Delete Detail Dialog -->
+	<div id="deleteDetailOverlay" style="
+	    display: none;
+	    position: fixed; inset: 0;
+	    background: rgba(0,0,0,0.3);
+	    z-index: 200;
+	    align-items: center;
+	    justify-content: center;
+	">
+	    <div style="
+	        background: #fff; border-radius: 16px;
+	        padding: 32px; max-width: 360px; width: 90%;
+	        text-align: center;
+	        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+	    ">
+	        <div style="
+	            width: 48px; height: 48px; border-radius: 12px;
+	            background: #FEE2E2; color: #991B1B;
+	            display: flex; align-items: center; justify-content: center;
+	            font-size: 22px; margin: 0 auto 16px;
+	        ">
+	            <i class="ti ti-file-minus"></i>
+	        </div>
+	        <p style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#1a1a1a; margin-bottom:8px;">
+	            Delete Details
+	        </p>
+	        <p id="deleteDetailMsg" style="font-size:13px; color:#888780; margin-bottom:24px;">
+	            Are you sure you want to delete details for this item?
+	        </p>
+	        <div style="display:flex; gap:12px; justify-content:center;">
+	            <button onclick="document.getElementById('deleteDetailOverlay').style.display='none'" style="
+	                height: 38px; padding: 0 24px; border-radius: 8px;
+	                border: 0.5px solid rgba(0,0,0,0.15);
+	                background: #fff; color: #5F5E5A;
+	                font-size: 13px; font-weight: 500;
+	                font-family: 'Inter', sans-serif; cursor: pointer;
+	            ">Cancel</button>
+	            <a id="deleteDetailBtn" href="#" style="
+	                height: 38px; padding: 0 24px; border-radius: 8px; border: none;
+	                background: #DC2626; color: #fff;
+	                font-size: 13px; font-weight: 500;
+	                font-family: 'Inter', sans-serif; cursor: pointer;
+	                display: inline-flex; align-items: center; gap: 6px;
+	                text-decoration: none;
+	            ">
+	                <i class="ti ti-file-minus" style="font-size:14px"></i>
+	                Yes, Delete
+	            </a>
+	        </div>
+	    </div>
+	</div>
+	
+	<script>
+	function showDeleteDetailDialog(id, name) {
+	    document.getElementById('deleteDetailMsg').textContent = 
+	        'Are you sure you want to delete details for "' + name + '"?';
+	    document.getElementById('deleteDetailBtn').href = 
+	        'ItemController?action=deleteItemDetail&id=' + id;
+	    const overlay = document.getElementById('deleteDetailOverlay');
+	    overlay.style.display = 'flex';
+	}
+	</script>
 
 </body>
 </html>

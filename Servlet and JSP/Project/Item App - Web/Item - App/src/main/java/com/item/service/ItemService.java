@@ -28,5 +28,5 @@ public interface ItemService {
     ItemDetail getItemDetail(long itemId);
     boolean addItemDetail(ItemDetail itemDetail);
     boolean updateItemDetail(ItemDetail itemDetail);
-
+    boolean deleteItemDetail(long itemId);
 }

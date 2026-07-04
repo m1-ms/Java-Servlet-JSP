@@ -59,6 +59,10 @@ public class ItemController extends HttpServlet {
                 case "updateItemDetail":     updateItemDetail(request, response);     break;
                 case "showAddDetailPage":    showAddDetailPage(request, response);    break;
                 case "showUpdateDetailPage": showUpdateDetailPage(request, response); break;
+                
+                case "showDetailPage":   showDetailPage(request, response);   break;
+                case "deleteItemDetail": deleteItemDetail(request, response); break;
+                
                 default:                     showItems(request, response);
             }
         } catch (DatabaseException e) {
@@ -331,6 +335,29 @@ public class ItemController extends HttpServlet {
         }
         
         request.getSession().setAttribute("successMessage", "Item Detials Update successfully! ✅");
+        response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
+    }
+    
+    
+    // Show Detail Page
+    private void showDetailPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        long id = Long.parseLong(request.getParameter("id"));
+        ItemDetail detail = itemService.getItemDetail(id);
+        Item item = itemService.selectItemById(id);
+        request.setAttribute("itemDetail", detail);
+        request.setAttribute("item", item);
+        request.getRequestDispatcher("showItemDetail.jsp").forward(request, response);
+    }
+
+    
+    // Delete Item Details
+    private void deleteItemDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        long id = Long.parseLong(request.getParameter("id"));
+        if (!itemService.deleteItemDetail(id)) {
+            handleError(request, response, "Failed to delete item details. Please try again.");
+            return;
+        }
+        request.getSession().setAttribute("successMessage", "Item details deleted successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 }

@@ -199,4 +199,21 @@ public class ItemServiceImpl implements ItemService {
             closeResources(connection, ps, null);
         }
     }
+    
+    
+    @Override
+    public boolean deleteItemDetail(long itemId) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = dataSource.getConnection();
+            ps = connection.prepareStatement("DELETE FROM item_details WHERE item_id = ?");
+            ps.setLong(1, itemId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to delete item details", e);
+        } finally {
+            closeResources(connection, ps, null);
+        }
+    }
 }

@@ -23,7 +23,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh; background: #f5f3ef;
-      display: flex; align-items: flex-start; justify-content: center;
+      display: flex; align-items: center ; justify-content: center;
       font-family: 'Inter', sans-serif; padding: 40px 24px;
     }
     .card {
