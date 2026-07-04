@@ -4,6 +4,11 @@
         response.sendRedirect("forgotPassword.jsp");
         return;
     }
+
+	String successMessage = (String) session.getAttribute("successMessage");
+	if (successMessage != null) {
+	    session.removeAttribute("successMessage");
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +32,20 @@
       border-radius: 16px; padding: 40px 40px 32px;
       width: 100%; max-width: 420px;
     }
+    
+    .success-msg {
+	  background: #E1F5EE;
+	  border: 0.5px solid rgba(29,158,117,0.3);
+	  border-radius: 8px;
+	  padding: 10px 14px;
+	  margin-bottom: 16px;
+	  font-size: 12px;
+	  color: #0F6E56;
+	  display: flex;
+	  align-items: center;
+	  gap: 8px;
+	}
+	    
     .card-top { text-align: center; margin-bottom: 32px; }
     .card-icon {
       width: 48px; height: 48px; border-radius: 12px;
@@ -93,6 +112,13 @@
         <%= request.getAttribute("errorMessage") %>
       </div>
     <% } %>
+
+	<% if (successMessage != null) { %>
+	  <div class="success-msg">
+	    <i class="ti ti-circle-check" style="font-size:16px"></i>
+	    <%= successMessage %>
+	  </div>
+	<% } %>
 
     <form action="AuthController" method="post">
       <input type="hidden" name="action" value="resetPassword">

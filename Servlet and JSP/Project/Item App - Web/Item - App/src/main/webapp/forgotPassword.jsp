@@ -93,7 +93,7 @@
 
       <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="e.g. mahmoud99" required>
+        <input type="text" id="username" name="username" placeholder="e.g. userName" required>
       </div>
       <div class="field">
         <label for="email">Email</label>

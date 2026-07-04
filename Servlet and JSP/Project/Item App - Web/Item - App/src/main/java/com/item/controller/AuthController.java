@@ -220,7 +220,7 @@ public class AuthController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("resetUserId", user.getId());
 
-        session.setAttribute("successMessage", "Verify Account Done 👋");
+        session.setAttribute("successMessage", "Verify successfully! ✅ Please set your new password.");
         request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
     }
 
