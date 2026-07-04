@@ -304,7 +304,7 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to add item details. Please try again."); return;
         }
         
-        request.getSession().setAttribute("successMessage", "Item Detials Added successfully! ✅");
+        request.getSession().setAttribute("successMessage", "Item Details Added successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
 
@@ -334,7 +334,7 @@ public class ItemController extends HttpServlet {
             handleError(request, response, "Failed to update item details. Please try again."); return;
         }
         
-        request.getSession().setAttribute("successMessage", "Item Detials Update successfully! ✅");
+        request.getSession().setAttribute("successMessage", "Item Details Update successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/ItemController?action=showItems");
     }
     

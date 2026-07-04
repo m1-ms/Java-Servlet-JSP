@@ -81,7 +81,6 @@ public class AuthController extends HttpServlet {
 
         HttpSession session = request.getSession();
         session.setAttribute("loggedUser", user);
-        session.setAttribute("successMessage", "Welcome back, " + user.getFirstName() + "! 👋");
 
 
         // Cookie

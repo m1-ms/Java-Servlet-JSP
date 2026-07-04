@@ -170,18 +170,18 @@
       <div class="form-row">
         <div class="field no-margin">
           <label for="firstName">First name</label>
-          <input type="text" id="firstName" name="firstName" placeholder="e.g. Mahmoud" required>
+          <input type="text" id="firstName" name="firstName" placeholder="e.g." required>
         </div>
         <div class="field no-margin">
           <label for="lastName">Last name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="e.g. Soliman" required>
+          <input type="text" id="lastName" name="lastName" placeholder="e.g." required>
         </div>
       </div>
 
       <div class="form-row">
         <div class="field no-margin">
           <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="e.g. mahmoud99" required>
+          <input type="text" id="username" name="username" placeholder="e.g. userName" required>
         </div>
         <div class="field no-margin">
           <label for="phone">Phone number</label>
