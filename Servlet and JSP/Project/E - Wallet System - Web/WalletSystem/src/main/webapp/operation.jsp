@@ -263,30 +263,12 @@
 	      <i class="ti ti-user" style="font-size:15px;color:#AEAEB2;"></i> Profile
 	    </a>
 	    <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 10px;"></div>
-	    <a href="AuthController?action=logout"
+	    <a href="#" onclick="confirmLogout()"
 	       style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#FF3B30;text-decoration:none;">
 	      <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Logout
 	    </a>
 	  </div>
 	</div>
-
-	<script>
-	  function toggleUserMenu() {
-	    const menu = document.getElementById('user-dropdown');
-	    const icon = document.getElementById('chevron-icon');
-	    const isOpen = menu.style.display !== 'none';
-	    menu.style.display = isOpen ? 'none' : 'block';
-	    icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
-	  }
-	
-	  document.addEventListener('click', function(e) {
-	    const footer = document.querySelector('.sidebar-footer');
-	    if (!footer.contains(e.target)) {
-	      document.getElementById('user-dropdown').style.display = 'none';
-	      document.getElementById('chevron-icon').className = 'ti ti-chevron-up';
-	    }
-	  });
-	</script>
 
 </div>
 
@@ -433,6 +415,29 @@
     }
   });
   <% } %>
+	  
+	  function toggleUserMenu() {
+	    const menu = document.getElementById('user-dropdown');
+	    const icon = document.getElementById('chevron-icon');
+	    const isOpen = menu.style.display !== 'none';
+	    menu.style.display = isOpen ? 'none' : 'block';
+	    icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+	  }
+	
+	  document.addEventListener('click', function(e) {
+	    const footer = document.querySelector('.sidebar-footer');
+	    if (!footer.contains(e.target)) {
+	      document.getElementById('user-dropdown').style.display = 'none';
+	      document.getElementById('chevron-icon').className = 'ti ti-chevron-up';
+	    }
+	  });
+	  
+	  function confirmLogout() {
+		    if (confirm("Are you sure you want to sign out?")) {
+		        window.location.href = "AuthController?action=logout";
+		    }
+		}
+  
 </script>
 
 </body>

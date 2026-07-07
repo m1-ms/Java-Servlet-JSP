@@ -24,7 +24,6 @@
       display: flex;
     }
 
-    /* ── SIDEBAR ── */
     .sidebar {
       width: 216px; background: #FAFAFA;
       border-right: 1px solid rgba(0,0,0,0.07);
@@ -101,7 +100,6 @@
     .u-name { font-size: 12px; font-weight: 600; color: #1C1C1E; }
     .u-role { font-size: 11px; color: #AEAEB2; }
 
-    /* ── MAIN ── */
     .main {
       flex: 1; display: flex; flex-direction: column;
       margin-left: 216px; min-height: 100vh;
@@ -134,7 +132,6 @@
 
     .content { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* BALANCE CARD */
     .balance-card {
       background: #1C1C1E; border-radius: 16px;
       padding: 24px 28px;
@@ -177,7 +174,6 @@
 
     .s-dot { width: 6px; height: 6px; border-radius: 50%; background: #30D158; }
 
-    /* ACTIONS */
     .actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
 
     .action-btn {
@@ -199,8 +195,7 @@
 
     .action-lbl { font-size: 11px; font-weight: 500; color: #6C6C70; }
 
-    /* BOTTOM GRID */
-    .grid { display: grid; grid-template-columns:1fr; gap: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
 
     .card {
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
@@ -218,7 +213,6 @@
     .card-link { font-size: 12px; font-weight: 500; color: #AEAEB2; text-decoration: none; }
     .card-link:hover { color: #1C1C1E; }
 
-    /* TX LIST */
     .tx-item {
       display: flex; align-items: center; gap: 11px;
       padding: 11px 18px;
@@ -247,20 +241,6 @@
     .tx-amt.neg { color: #FF3B30; }
 
     .tx-empty { padding: 20px 18px; font-size: 12px; color: #AEAEB2; text-align: center; }
-
-    /* INFO */
-    .info-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 11px 18px; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 12px;
-    }
-
-    .info-row:last-child { border-bottom: none; }
-    .info-k { color: #AEAEB2; }
-    .info-v { color: #1C1C1E; font-weight: 500; }
-    .info-tag {
-      display: inline-block; background: #F2F2F7; border-radius: 6px;
-      padding: 2px 8px; font-size: 11px; font-weight: 500; color: #6C6C70;
-    }
   </style>
 </head>
 <body>
@@ -292,53 +272,27 @@
     <a href="AccountController?action=showDeletePage" class="nav-item danger"><i class="ti ti-trash"></i> Delete Account</a>
   </div>
 
-	<div class="sidebar-footer">
-	  <div class="user-row" onclick="toggleUserMenu()" style="cursor:pointer;">
-	    <div class="avatar"><%= account.getFullName().substring(0,1).toUpperCase() %></div>
-	    <div>
-	      <div class="u-name"><%= account.getFullName().split(" ")[0] %></div>
-	      <div class="u-role">User</div>
-	    </div>
-	    <i class="ti ti-chevron-up" id="chevron-icon" style="font-size:13px;color:#AEAEB2;margin-left:auto;"></i>
-	  </div>
-	
-	  <div id="user-dropdown" style="display:none;background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:10px;margin:0 8px 8px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-	    <a href="AccountController?action=showProfilePage"
-	       style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#3A3A3C;text-decoration:none;">
-	      <i class="ti ti-user" style="font-size:15px;color:#AEAEB2;"></i> Profile
-	    </a>
-	    <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 10px;"></div>
-	    <a href="AuthController?action=logout"
-	       style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#FF3B30;text-decoration:none;">
-	      <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Logout
-	    </a>
-	  </div>
-	</div>
-
-	<script>
-	  function toggleUserMenu() {
-	    const menu = document.getElementById('user-dropdown');
-	    const icon = document.getElementById('chevron-icon');
-	    const isOpen = menu.style.display !== 'none';
-	    menu.style.display = isOpen ? 'none' : 'block';
-	    icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
-	  }
-	
-	  document.addEventListener('click', function(e) {
-	    const footer = document.querySelector('.sidebar-footer');
-	    if (!footer.contains(e.target)) {
-	      document.getElementById('user-dropdown').style.display = 'none';
-	      document.getElementById('chevron-icon').className = 'ti ti-chevron-up';
-	    }
-	  });
-	  
-	  function confirmLogout() {
-		    if (confirm("Are you sure you want to sign out?")) {
-		        window.location.href = "AuthController?action=logout";
-		    }
-		}
-	  
-	</script>
+  <div class="sidebar-footer">
+    <div class="user-row" onclick="toggleUserMenu()" style="cursor:pointer;">
+      <div class="avatar"><%= account.getFullName().substring(0,1).toUpperCase() %></div>
+      <div>
+        <div class="u-name"><%= account.getFullName().split(" ")[0] %></div>
+        <div class="u-role">User</div>
+      </div>
+      <i class="ti ti-chevron-up" id="chevron-icon" style="font-size:13px;color:#AEAEB2;margin-left:auto;"></i>
+    </div>
+    <div id="user-dropdown" style="display:none;background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:10px;margin:0 8px 8px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+      <a href="AccountController?action=showProfilePage"
+         style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#3A3A3C;text-decoration:none;">
+        <i class="ti ti-user" style="font-size:15px;color:#AEAEB2;"></i> Profile
+      </a>
+      <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 10px;"></div>
+      <a href="#" onclick="confirmLogout()"
+         style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#FF3B30;text-decoration:none;">
+        <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Logout
+      </a>
+    </div>
+  </div>
 </div>
 
 <!-- MAIN -->
@@ -394,8 +348,6 @@
 
     <!-- GRID -->
     <div class="grid">
-
-      <!-- RECENT TRANSACTIONS -->
       <div class="card">
         <div class="card-head">
           <span class="card-title">Recent Transactions</span>
@@ -404,9 +356,9 @@
         <% if (recentTx == null || recentTx.isEmpty()) { %>
           <div class="tx-empty">No transactions yet.</div>
         <% } else { for (Transaction tx : recentTx) {
-            boolean isDeposit  = tx.getType().equalsIgnoreCase("DEPOSIT");
+            boolean isDeposit    = tx.getType().equalsIgnoreCase("DEPOSIT");
             boolean isTransferIn = tx.getType().equalsIgnoreCase("TRANSFER_IN");
-            boolean isPositive = isDeposit || isTransferIn;
+            boolean isPositive   = isDeposit || isTransferIn;
             String icClass = isDeposit ? "in" : (isTransferIn ? "in" : (tx.getType().equalsIgnoreCase("WITHDRAW") ? "out" : "trf"));
             String icIcon  = isDeposit ? "ti-arrow-down" : (isTransferIn ? "ti-arrow-down" : (tx.getType().equalsIgnoreCase("WITHDRAW") ? "ti-arrow-up" : "ti-arrows-exchange"));
         %>
@@ -422,21 +374,34 @@
         </div>
         <% } } %>
       </div>
-
-      <!-- ACCOUNT INFO -->
-      
-<!--       <div class="card"> -->
-<!--         <div class="card-head"><span class="card-title">Account Info</span></div> -->
-<%--         <div class="info-row"><span class="info-k">Name</span><span class="info-v"><%= account.getFullName() %></span></div> --%>
-<%--         <div class="info-row"><span class="info-k">Username</span><span class="info-v"><%= account.getUsername() %></span></div> --%>
-<%--         <div class="info-row"><span class="info-k">Phone</span><span class="info-v"><%= account.getPhone() %></span></div> --%>
-<%--         <div class="info-row"><span class="info-k">Age</span><span class="info-v"><%= account.getAge() %></span></div> --%>
-<!--         <div class="info-row"><span class="info-k">Role</span><span class="info-v"><span class="info-tag">User</span></span></div> -->
-<!--       </div> -->
-
     </div>
+
   </div>
 </div>
+
+<script>
+  function toggleUserMenu() {
+    const menu = document.getElementById('user-dropdown');
+    const icon = document.getElementById('chevron-icon');
+    const isOpen = menu.style.display !== 'none';
+    menu.style.display = isOpen ? 'none' : 'block';
+    icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+  }
+
+  document.addEventListener('click', function(e) {
+    const footer = document.querySelector('.sidebar-footer');
+    if (!footer.contains(e.target)) {
+      document.getElementById('user-dropdown').style.display = 'none';
+      document.getElementById('chevron-icon').className = 'ti ti-chevron-up';
+    }
+  });
+
+  function confirmLogout() {
+    if (confirm("Are you sure you want to sign out?")) {
+      window.location.href = "AuthController?action=logout";
+    }
+  }
+</script>
 
 </body>
 </html>
