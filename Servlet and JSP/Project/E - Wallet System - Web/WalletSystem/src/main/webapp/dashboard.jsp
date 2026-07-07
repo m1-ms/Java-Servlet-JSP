@@ -258,7 +258,7 @@
 
   <div class="nav-section">
     <span class="nav-lbl">Menu</span>
-    <a href="DashboardController" class="nav-item active"><i class="ti ti-home"></i> Dashboard</a>
+    <a href="DashboardController" class="nav-item active"><i class="ti ti-home"></i> Dash Board</a>
     <a href="WalletController?action=showDepositPage" class="nav-item"><i class="ti ti-arrow-down-circle"></i> Deposit</a>
     <a href="WalletController?action=showWithdrawPage" class="nav-item"><i class="ti ti-arrow-up-circle"></i> Withdraw</a>
     <a href="WalletController?action=showTransferPage" class="nav-item"><i class="ti ti-transfer"></i> Transfer</a>
@@ -289,7 +289,7 @@
       <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 10px;"></div>
       <a href="#" onclick="confirmLogout()"
          style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#FF3B30;text-decoration:none;">
-        <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Logout
+        <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Sign Out
       </a>
     </div>
   </div>
@@ -379,6 +379,21 @@
   </div>
 </div>
 
+<!-- LOGOUT DIALOG -->
+<div id="logout-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#FFFFFF;border-radius:16px;padding:28px 24px;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;">
+    <div style="width:44px;height:44px;border-radius:12px;background:#F2F2F7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;color:#1C1C1E;">
+      <i class="ti ti-logout"></i>
+    </div>
+    <div style="font-size:16px;font-weight:700;color:#1C1C1E;letter-spacing:-0.3px;margin-bottom:6px;">Sign out?</div>
+    <div style="font-size:13px;color:#AEAEB2;margin-bottom:22px;">You'll need to sign in again to access your account.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="closeLogout()" style="flex:1;padding:11px;background:#F2F2F7;border:none;border-radius:10px;font-size:13px;font-weight:600;color:#3A3A3C;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+      <button onclick="doLogout()" style="flex:1;padding:11px;background:#1C1C1E;border:none;border-radius:10px;font-size:13px;font-weight:600;color:white;cursor:pointer;font-family:'Inter',sans-serif;">Sign out</button>
+    </div>
+  </div>
+</div>
+
 <script>
   function toggleUserMenu() {
     const menu = document.getElementById('user-dropdown');
@@ -397,10 +412,17 @@
   });
 
   function confirmLogout() {
-    if (confirm("Are you sure you want to sign out?")) {
-      window.location.href = "AuthController?action=logout";
-    }
-  }
+	    const overlay = document.getElementById('logout-overlay');
+	    overlay.style.display = 'flex';
+	}
+
+	function closeLogout() {
+	    document.getElementById('logout-overlay').style.display = 'none';
+	}
+
+	function doLogout() {
+	    window.location.href = "AuthController?action=logout";
+	}
 </script>
 
 </body>
