@@ -220,4 +220,24 @@ public class AccountServiceImpl implements AccountService {
         return list;
     }
 
+    
+ // Update Name
+    @Override
+    public void updateName(Account account, String newName) {
+        // Validate via setter
+        account.setName(newName);
+
+        String sql = "UPDATE ACCOUNTS SET NAME = ? WHERE USERNAME = ?";
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, newName);
+            ps.setString(2, account.getUserName());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new AccountException("Database error: " + e.getMessage());
+        }
+    }
+    
 }

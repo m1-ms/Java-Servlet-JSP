@@ -19,4 +19,7 @@ public interface AccountService {
 
     // inActive Account
     public void inActive(String userName , String password);
+    
+    // Update Name
+    void updateName(Account account, String newName);
 }

@@ -37,6 +37,11 @@ public class AccountController extends HttpServlet {
             case "showDeletePage":
                 request.getRequestDispatcher("deleteAccount.jsp").forward(request, response);
                 break;
+                
+            case "showProfilePage":
+                request.getRequestDispatcher("profile.jsp").forward(request, response);
+                break;
+                
             default:
                 response.sendRedirect("DashboardController");
         }
@@ -58,6 +63,8 @@ public class AccountController extends HttpServlet {
             case "changePassword": handleChangePassword(request, response); break;
             case "deleteAccount":  handleDeleteAccount(request, response);  break;
             case "inActive":       handleInActive(request, response);       break;
+            case "updateName": handleUpdateName(request, response); break;
+            
             default:               response.sendRedirect("DashboardController");
         }
     }
@@ -130,4 +137,30 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("deleteAccount.jsp").forward(request, response);
         }
     }
+    
+    
+ // Update Name
+    private void handleUpdateName(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Account account = (Account) request.getSession().getAttribute("account");
+        String newName  = request.getParameter("newName");
+
+        try {
+            AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+            accountService.updateName(account, newName);
+
+            // Refresh session
+            Account fresh = accountService.findByUserName(account.getUserName());
+            request.getSession().setAttribute("account", fresh);
+
+            request.setAttribute("success", "Name updated successfully!");
+            request.getRequestDispatcher("profile.jsp").forward(request, response);
+
+        } catch (AccountException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("profile.jsp").forward(request, response);
+        }
+    }
+    
 }
