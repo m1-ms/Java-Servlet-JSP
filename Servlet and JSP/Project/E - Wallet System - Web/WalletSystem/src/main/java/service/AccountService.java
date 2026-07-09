@@ -22,4 +22,11 @@ public interface AccountService {
     
     // Update Name
     void updateName(Account account, String newName);
+    
+    // Verify Account 
+    Account verifyAccount(String userName, String phoneNumber, String email);
+    
+    // Reset Password
+    void resetPassword(String userName, String newPassword);
+
 }

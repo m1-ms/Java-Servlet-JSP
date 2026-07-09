@@ -230,7 +230,16 @@
     </div>
     <span class="brand-name">Storm Cash</span>
   </div>
-
+  
+	<% if (account.isAdmin()) { %>
+		<div class="nav-section" style="padding-top:8px;">
+		  <span class="nav-lbl">Admin</span>
+		  <a href="AdminController?action=showDashboard" class="nav-item">
+		    <i class="ti ti-shield-check"></i> Admin DashBoard
+		  </a>
+		</div>
+	<% } %>
+	
   <div class="nav-section">
     <span class="nav-lbl">Menu</span>
     <a href="DashboardController" class="nav-item"><i class="ti ti-home"></i> Dash Board</a>
@@ -239,6 +248,7 @@
     <a href="WalletController?action=showTransferPage"     class="nav-item <%= op.equals("transfer") ? "active" : "" %>"><i class="ti ti-transfer"></i> Transfer</a>
     <a href="WalletController?action=showTransactionsPage" class="nav-item"><i class="ti ti-history"></i> Transactions</a>
   </div>
+
 
   <div class="nav-section">
     <span class="nav-lbl">Account</span>

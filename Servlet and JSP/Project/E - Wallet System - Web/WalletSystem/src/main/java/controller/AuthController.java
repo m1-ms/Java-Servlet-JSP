@@ -32,6 +32,10 @@ public class AuthController extends HttpServlet {
         switch (action) {
             case "login":    handleLogin(request, response);    break;
             case "register": handleRegister(request, response); break;
+            
+            case "verifyAccount": handleVerifyAccount(request, response); break;
+            case "resetPassword": handleResetPassword(request, response); break;
+            
             default:         response.sendRedirect("login.jsp");
         }
     }
@@ -44,9 +48,14 @@ public class AuthController extends HttpServlet {
 
         if ("logout".equals(action)) {
             handleLogout(request, response);
+        } else if ("ForgetPassword".equals(action)) {
+            request.getRequestDispatcher("forgetPassword.jsp").forward(request, response);
+        } else if ("ResetPassword".equals(action)) {
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
         } else {
             response.sendRedirect("login.jsp");
         }
+        
     }
 
     // Login
@@ -109,5 +118,58 @@ public class AuthController extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
         response.sendRedirect("login.jsp");
+    }
+    
+    
+    // Verify Account
+    private void handleVerifyAccount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String userName    = request.getParameter("username");
+        String phoneNumber = request.getParameter("phone");
+        String email       = request.getParameter("email");
+
+        try {
+            AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+            Account account = accountService.verifyAccount(userName, phoneNumber, email);
+
+            request.getSession().setAttribute("resetUsername", account.getUserName());
+            response.sendRedirect("resetPassword.jsp");
+
+        } catch (AccountException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("forgetPassword.jsp").forward(request, response);
+        }
+    }
+
+    
+    // Reset Password
+    private void handleResetPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String userName   = (String) request.getSession().getAttribute("resetUsername");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        if (userName == null) {
+            response.sendRedirect("forgetPassword.jsp");
+            return;
+        }
+
+        try {
+            if (!newPassword.equals(confirmPassword))
+                throw new AccountException("Passwords don't match!");
+
+            AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+            accountService.resetPassword(userName, newPassword);
+
+            request.getSession().removeAttribute("resetUsername");
+
+            response.sendRedirect("login.jsp?success=Password+reset+successfully!");
+
+        } catch (AccountException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+        }
     }
 }

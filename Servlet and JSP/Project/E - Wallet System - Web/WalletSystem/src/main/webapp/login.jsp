@@ -191,7 +191,7 @@
 
 <div class="card">
 
-  <!-- LEFT -->
+
   <div class="left">
     <div class="brand">
       <div class="logo-mark">
@@ -203,7 +203,7 @@
     </div>
 
     <div class="hero">
-      <h1 class="hero-title">Your money,<br><strong>under control.</strong></h1>
+      <h1 class="hero-title">Your Money,<br><strong>Under Control.</strong></h1>
       <p class="hero-desc">Send, receive, and manage your balance with clarity and confidence.</p>
     </div>
 
@@ -217,7 +217,7 @@
   <!-- RIGHT -->
   <div class="right">
     <div class="form-eyebrow">Welcome</div>
-    <div class="form-title" id="form-title">Sign in to your account</div>
+    <div class="form-title" id="form-title">Sign in to Your Account</div>
 
     <div class="seg">
       <button class="seg-btn active" onclick="switchForm('login', this)">Login</button>
@@ -238,7 +238,7 @@
         <input type="hidden" name="action" value="login">
         <div class="field">
           <label>UserName</label>
-          <input type="text" name="username" placeholder="your_username" required>
+          <input type="text" name="username" placeholder="" required>
         </div>
         <div class="field">
           <label>Password</label>
@@ -246,8 +246,17 @@
         </div>
         <button type="submit" class="btn">Sign In</button>
       </form>
-      <div class="switch-link">No account? <a onclick="switchFormByName('register')">Create one</a></div>
+      
+    <div style="text-align:center;margin-top:10px;">
+	  <a href="AuthController?action=ForgetPassword"
+	     style="font-size:12px;color:#AEAEB2;text-decoration:none;">
+	    Forget Password ?
+	  </a>
+	</div>
+      
+      <div class="switch-link">No Account ? <a onclick="switchFormByName('register')">Create One</a></div>
     </div>
+
 
     <!-- REGISTER PANEL -->
     <div id="panel-register" class="panel">
@@ -255,19 +264,19 @@
         <input type="hidden" name="action" value="register">
         <div class="field">
           <label>Full Name</label>
-          <input type="text" name="fullName" placeholder="full name" required>
+          <input type="text" name="fullName" placeholder="" required>
         </div>
         <div class="field">
           <label>UserName</label>
-          <input type="text" name="username" placeholder="username" required>
+          <input type="text" name="username" placeholder="" required>
         </div>
         <div class="field">
           <label>Phone Number</label>
-          <input type="text" name="phone" placeholder="01xxxxxxxxx" required>
+          <input type="text" name="phone" placeholder="" required>
         </div>
         
         <div class="field">
-			<label>Email</label>
+			<label>E-Mail</label>
   			<input type="text" name="email" placeholder="example@gmail.com" required>
 		</div>
         
@@ -281,7 +290,9 @@
         </div>
         <button type="submit" class="btn">Create Account</button>
       </form>
-      <div class="switch-link">Already have one? <a onclick="switchFormByName('login')">Sign in</a></div>
+      <div class="switch-link">Already have One? <a onclick="switchFormByName('login')">Sign In</a></div>
+      
+      
     </div>
 
   </div>

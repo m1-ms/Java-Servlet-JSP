@@ -261,12 +261,12 @@
 <div class="main">
   <div class="topbar">
     <div>
-      <div class="page-title">Admin Dashboard</div>
-      <div class="page-sub">System overview & account management</div>
+      <div class="page-title">Admin DashBoard</div>
+      <div class="page-sub">System Overview & Account Management</div>
     </div>
     <div class="topbar-right">
       <div class="admin-tag"><i class="ti ti-shield-check"></i> Admin</div>
-      <a href="#" onclick="confirmLogout()" class="signout-btn"><i class="ti ti-logout"></i> Sign out</a>
+      <a href="#" onclick="confirmLogout()" class="signout-btn"><i class="ti ti-logout"></i> Sign Out</a>
     </div>
   </div>
 
@@ -314,9 +314,9 @@
         <thead>
           <tr>
             <th style="width:22%;">Name</th>
-            <th style="width:15%;">Username</th>
+            <th style="width:15%;">UserName</th>
             <th style="width:16%;">Phone</th>
-            <th style="width:21%;">Email</th>
+            <th style="width:21%;">E-Mail</th>
             <th style="width:14%;text-align:right;">Balance</th>
             <th style="width:8%;text-align:center;">Role</th>
             <th style="width:9%;text-align:center;">Status</th>

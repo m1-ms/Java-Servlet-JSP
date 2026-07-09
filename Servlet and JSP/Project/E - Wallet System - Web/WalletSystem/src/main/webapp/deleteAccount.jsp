@@ -101,6 +101,15 @@
     </div>
     <span class="brand-name">Storm Cash</span>
   </div>
+  
+  <% if (account.isAdmin()) { %>
+	<div class="nav-section" style="padding-top:8px;">
+	  <span class="nav-lbl">Admin</span>
+	  <a href="AdminController?action=showDashboard" class="nav-item">
+	    <i class="ti ti-shield-check"></i> Admin DashBoard
+	  </a>
+	</div>
+	<% } %>
   <div class="nav-section">
     <span class="nav-lbl">Menu</span>
     <a href="DashboardController" class="nav-item"><i class="ti ti-home"></i> Dash Board</a>
@@ -115,6 +124,8 @@
     <a href="AccountController?action=showChangePasswordPage" class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
     <a href="AccountController?action=showDeletePage"         class="nav-item danger active"><i class="ti ti-trash"></i> Delete Account</a>
   </div>
+  
+
 
 	<div class="sidebar-footer">
 	  <div class="user-row" onclick="toggleUserMenu()" style="cursor:pointer;">
@@ -199,7 +210,7 @@
     <div class="info-card">
       <div class="info-title">Your Account</div>
       <div class="info-row"><span class="info-k">Name</span><span class="info-v"><%= account.getFullName() %></span></div>
-      <div class="info-row"><span class="info-k">Username</span><span class="info-v"><%= account.getUsername() %></span></div>
+      <div class="info-row"><span class="info-k">UserName</span><span class="info-v"><%= account.getUsername() %></span></div>
       <div class="info-row"><span class="info-k">Balance</span><span class="info-v" style="color:#FF3B30;">EGP <%= String.format("%,.2f", account.getBalance()) %></span></div>
       <div class="info-row"><span class="info-k">Email</span><span class="info-v"><%= account.getEmail() %></span></div>
     </div>

@@ -143,6 +143,16 @@
     </div>
     <span class="brand-name">Storm Cash</span>
   </div>
+  
+  	<% if (account.isAdmin()) { %>
+	<div class="nav-section" style="padding-top:8px;">
+	  <span class="nav-lbl">Admin</span>
+	  <a href="AdminController?action=showDashboard" class="nav-item">
+	    <i class="ti ti-shield-check"></i> Admin DashBoard
+	  </a>
+	</div>
+	<% } %>
+  
   <div class="nav-section">
     <span class="nav-lbl">Menu</span>
     <a href="DashboardController"                          class="nav-item"><i class="ti ti-home"></i> Dash Board</a>
@@ -157,6 +167,8 @@
     <a href="AccountController?action=showChangePasswordPage" class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
     <a href="AccountController?action=showDeletePage"         class="nav-item danger"><i class="ti ti-trash"></i> Delete Account</a>
   </div>
+  
+  
   <div class="sidebar-footer">
     <div class="user-row" onclick="toggleUserMenu()" style="cursor:pointer;">
       <div class="avatar-lg"><%= account.getFullName().substring(0,1).toUpperCase() %></div>
@@ -211,7 +223,7 @@
           <span class="info-v"><%= account.getFullName() %></span>
         </div>
         <div class="info-row">
-          <span class="info-k"><i class="ti ti-at"></i> Username</span>
+          <span class="info-k"><i class="ti ti-at"></i> UserName</span>
           <span class="info-v"><%= account.getUsername() %></span>
         </div>
         <div class="info-row">
@@ -219,7 +231,7 @@
           <span class="info-v"><%= account.getPhone() %></span>
         </div>
         <div class="info-row">
-          <span class="info-k"><i class="ti ti-mail"></i> Email</span>
+          <span class="info-k"><i class="ti ti-mail"></i> E-Mail</span>
           <span class="info-v"><%= account.getEmail() %></span>
         </div>
         <div class="info-row">

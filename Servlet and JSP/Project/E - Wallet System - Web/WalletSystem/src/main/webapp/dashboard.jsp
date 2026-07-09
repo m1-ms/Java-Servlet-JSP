@@ -255,7 +255,18 @@
     </div>
     <span class="brand-name">Storm Cash</span>
   </div>
-
+  
+  
+	<% if (account.isAdmin()) { %>
+	<div class="nav-section" style="padding-top:8px;">
+	  <span class="nav-lbl">Admin</span>
+	  <a href="AdminController?action=showDashboard" class="nav-item">
+	    <i class="ti ti-shield-check"></i> Admin DashBoard
+	  </a>
+	</div>
+	<% } %>
+	
+	
   <div class="nav-section">
     <span class="nav-lbl">Menu</span>
     <a href="DashboardController" class="nav-item active"><i class="ti ti-home"></i> Dash Board</a>
@@ -264,6 +275,8 @@
     <a href="WalletController?action=showTransferPage" class="nav-item"><i class="ti ti-transfer"></i> Transfer</a>
     <a href="WalletController?action=showTransactionsPage" class="nav-item"><i class="ti ti-history"></i> Transactions</a>
   </div>
+  
+
 
   <div class="nav-section">
     <span class="nav-lbl">Account</span>
@@ -302,7 +315,7 @@
       <div class="page-title">Overview</div>
       <div class="page-sub">Welcome back, <%= account.getFullName().split(" ")[0] %></div>
     </div>
-    <a href="#" onclick="confirmLogout()" class="signout-btn"><i class="ti ti-logout"></i> Sign out</a>
+    <a href="#" onclick="confirmLogout()" class="signout-btn"><i class="ti ti-logout"></i> Sign Out</a>
   </div>
 
   <div class="content">
@@ -321,7 +334,7 @@
           <span class="bal-int"><%= String.format("%,d", intPart) %></span>
           <span class="bal-dec">.<%= String.format("%02d", decPart) %></span>
         </div>
-        <div class="bal-sub">Updated just now</div>
+        <div class="bal-sub">Updated just Now</div>
       </div>
       <div class="status-pill"><div class="s-dot"></div> Active</div>
     </div>
@@ -351,7 +364,6 @@
       <div class="card">
         <div class="card-head">
           <span class="card-title">Recent Transactions</span>
-          <a href="WalletController?action=showTransactionsPage" class="card-link">See all</a>
         </div>
         <% if (recentTx == null || recentTx.isEmpty()) { %>
           <div class="tx-empty">No transactions yet.</div>

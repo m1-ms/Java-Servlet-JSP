@@ -221,7 +221,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     
- // Update Name
+    // Update Name
     @Override
     public void updateName(Account account, String newName) {
         // Validate via setter
@@ -239,5 +239,44 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountException("Database error: " + e.getMessage());
         }
     }
+    
+    
+    // Verify Account 
+    @Override
+    public Account verifyAccount(String userName, String phoneNumber, String email) {
+        Account account = findByUserName(userName);
+
+        if (account == null)
+            throw new AccountException("Username not found!");
+
+        if (!account.getPhoneNumber().equals(phoneNumber))
+            throw new AccountException("Phone number doesn't match!");
+
+        if (!account.getEmail().equals(email))
+            throw new AccountException("Email doesn't match!");
+
+        return account;
+    }
+
+    
+    // Reset Password
+    @Override
+    public void resetPassword(String userName, String newPassword) {
+        if (newPassword == null || newPassword.length() < 6)
+            throw new AccountException("Password must be at least 6 characters!");
+
+        String sql = "UPDATE ACCOUNTS SET PASSWORD = ? WHERE USERNAME = ?";
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);
+            ps.setString(2, userName);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new AccountException("Database error: " + e.getMessage());
+        }
+    }
+    
     
 }
