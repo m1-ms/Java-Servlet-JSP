@@ -1,457 +1,670 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Account, java.util.List" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="model.Account, java.util.List"%>
 <%
-    Account admin = (Account) session.getAttribute("account");
-    if (admin == null || !admin.getRole().equalsIgnoreCase("ADMIN")) {
-        response.sendRedirect("login.jsp"); return;
-    }
-    List<Account> allAccounts = (List<Account>) request.getAttribute("allAccounts");
-    long totalAccounts = allAccounts != null ? allAccounts.size() : 0;
-    long activeCount   = allAccounts != null ? allAccounts.stream().filter(a -> a.isActive()).count() : 0;
-    long inactiveCount = totalAccounts - activeCount;
-    double totalBalance = allAccounts != null ? allAccounts.stream().mapToDouble(Account::getBalance).sum() : 0;
+Account admin = (Account) session.getAttribute("account");
+if (admin == null || !admin.getRole().equalsIgnoreCase("ADMIN")) {
+	response.sendRedirect("login.jsp");
+	return;
+}
+List<Account> allAccounts = (List<Account>) request.getAttribute("allAccounts");
+long totalAccounts = allAccounts != null ? allAccounts.size() : 0;
+long activeCount = allAccounts != null ? allAccounts.stream().filter(a -> a.isActive()).count() : 0;
+long inactiveCount = totalAccounts - activeCount;
+double totalBalance = allAccounts != null ? allAccounts.stream().mapToDouble(Account::getBalance).sum() : 0;
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storm Cash — Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storm Cash — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
 
-    body { font-family: 'Inter', sans-serif; background: #F2F2F7; min-height: 100vh; display: flex; }
+body {
+	font-family: 'Inter', sans-serif;
+	background: #F2F2F7;
+	min-height: 100vh;
+	display: flex;
+}
 
-    .sidebar {
-      width: 216px; background: #FAFAFA;
-      border-right: 1px solid rgba(0,0,0,0.07);
-      display: flex; flex-direction: column;
-      flex-shrink: 0; min-height: 100vh;
-      position: fixed; top: 0; left: 0; bottom: 0;
-    }
+.sidebar {
+	width: 216px;
+	background: #FAFAFA;
+	border-right: 1px solid rgba(0, 0, 0, 0.07);
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	min-height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+}
 
-    .brand {
-      display: flex; align-items: center; gap: 10px;
-      padding: 20px 18px 16px; border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 20px 18px 16px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-    .logo-mark {
-      width: 30px; height: 30px; border-radius: 8px; background: #1C1C1E;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+.logo-mark {
+	width: 30px;
+	height: 30px;
+	border-radius: 8px;
+	background: #1C1C1E;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
 
-    .logo-mark svg { display: block; }
-    .brand-name { font-size: 14px; font-weight: 650; color: #1C1C1E; letter-spacing: -0.4px; }
+.logo-mark svg {
+	display: block;
+}
 
-    .nav-section { padding: 14px 10px 4px; }
+.brand-name {
+	font-size: 14px;
+	font-weight: 650;
+	color: #1C1C1E;
+	letter-spacing: -0.4px;
+}
 
-    .nav-lbl {
-      font-size: 10px; font-weight: 600; color: #C7C7CC;
-      letter-spacing: 1px; text-transform: uppercase;
-      padding: 0 8px; margin-bottom: 3px; display: block;
-    }
+.nav-section {
+	padding: 14px 10px 4px;
+}
 
-    .nav-item {
-      display: flex; align-items: center; gap: 8px;
-      width: 100%; padding: 7px 10px;
-      font-size: 13px; font-weight: 500; color: #3A3A3C;
-      border-radius: 9px; cursor: pointer; border: none; background: none;
-      font-family: 'Inter', sans-serif; text-align: left; text-decoration: none;
-      transition: background 0.12s; margin-bottom: 1px;
-    }
+.nav-lbl {
+	font-size: 10px;
+	font-weight: 600;
+	color: #C7C7CC;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 0 8px;
+	margin-bottom: 3px;
+	display: block;
+}
 
-    .nav-item i { font-size: 15px; color: #C7C7CC; width: 18px; text-align: center; flex-shrink: 0; }
-    .nav-item:hover { background: #F2F2F7; color: #1C1C1E; }
-    .nav-item:hover i { color: #6C6C70; }
-    .nav-item.active { background: #FFFFFF; color: #1C1C1E; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
-    .nav-item.active i { color: #1C1C1E; }
+.nav-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 7px 10px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #3A3A3C;
+	border-radius: 9px;
+	cursor: pointer;
+	border: none;
+	background: none;
+	font-family: 'Inter', sans-serif;
+	text-align: left;
+	text-decoration: none;
+	transition: background 0.12s;
+	margin-bottom: 1px;
+}
 
-    .sidebar-footer { margin-top: auto; padding: 10px; border-top: 1px solid rgba(0,0,0,0.05); }
+.nav-item i {
+	font-size: 15px;
+	color: #C7C7CC;
+	width: 18px;
+	text-align: center;
+	flex-shrink: 0;
+}
 
-    .user-row { display: flex; align-items: center; gap: 9px; padding: 8px; border-radius: 9px; }
+.nav-item:hover {
+	background: #F2F2F7;
+	color: #1C1C1E;
+}
 
-    .avatar {
-      width: 28px; height: 28px; border-radius: 50%; background: #1C1C1E;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: white; flex-shrink: 0;
-    }
+.nav-item:hover i {
+	color: #6C6C70;
+}
 
-    .u-name { font-size: 12px; font-weight: 600; color: #1C1C1E; }
-    .u-role { font-size: 11px; color: #AEAEB2; }
+.nav-item.active {
+	background: #FFFFFF;
+	color: #1C1C1E;
+	font-weight: 600;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
 
-    /* MAIN */
-    .main { flex: 1; display: flex; flex-direction: column; margin-left: 216px; min-height: 100vh; }
+.nav-item.active i {
+	color: #1C1C1E;
+}
 
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 28px;
-      background: rgba(242,242,247,0.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      position: sticky; top: 0; z-index: 10;
-    }
+.sidebar-footer {
+	margin-top: auto;
+	padding: 10px;
+	border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-    .page-title { font-size: 17px; font-weight: 700; color: #1C1C1E; letter-spacing: -0.5px; }
-    .page-sub { font-size: 12px; color: #AEAEB2; margin-top: 1px; }
+.user-row {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 8px;
+	border-radius: 9px;
+}
 
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
+.avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: #1C1C1E;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 10px;
+	font-weight: 700;
+	color: white;
+	flex-shrink: 0;
+}
 
-    .admin-tag {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 11px; background: #1C1C1E; border-radius: 7px;
-      font-size: 11px; font-weight: 600; color: white;
-    }
+.u-name {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1C1C1E;
+}
 
-    .admin-tag i { font-size: 12px; }
+.u-role {
+	font-size: 11px;
+	color: #AEAEB2;
+}
 
-    .signout-btn {
-      display: flex; align-items: center; gap: 5px;
-      padding: 6px 13px; background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.09); border-radius: 8px;
-      font-size: 12px; font-weight: 500; color: #3A3A3C; cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-      text-decoration: none; transition: background 0.12s;
-    }
+/* MAIN */
+.main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	margin-left: 216px;
+	min-height: 100vh;
+}
 
-    .signout-btn:hover { background: #F2F2F7; }
-    .signout-btn i { font-size: 14px; color: #AEAEB2; }
+.topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 28px;
+	background: rgba(242, 242, 247, 0.85);
+	backdrop-filter: blur(12px);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
 
-    .content { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+.page-title {
+	font-size: 17px;
+	font-weight: 700;
+	color: #1C1C1E;
+	letter-spacing: -0.5px;
+}
 
-    /* STATS */
-    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.page-sub {
+	font-size: 12px;
+	color: #AEAEB2;
+	margin-top: 1px;
+}
 
-    .stat-card {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 13px; padding: 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-    }
+.topbar-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 
-    .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.admin-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 11px;
+	background: #1C1C1E;
+	border-radius: 7px;
+	font-size: 11px;
+	font-weight: 600;
+	color: white;
+}
 
-    .stat-icon {
-      width: 30px; height: 30px; border-radius: 8px; background: #F2F2F7;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; color: #6C6C70;
-    }
+.admin-tag i {
+	font-size: 12px;
+}
 
-    .stat-num { font-size: 22px; font-weight: 700; color: #1C1C1E; letter-spacing: -0.8px; }
-    .stat-lbl { font-size: 11px; color: #AEAEB2; margin-top: 2px; }
+.signout-btn {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 13px;
+	background: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.09);
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #3A3A3C;
+	cursor: pointer;
+	font-family: 'Inter', sans-serif;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	text-decoration: none;
+	transition: background 0.12s;
+}
 
-    /* TABLE */
-    .table-card {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 14px; overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
+.signout-btn:hover {
+	background: #F2F2F7;
+}
 
-    .table-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 18px 11px; border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
+.signout-btn i {
+	font-size: 14px;
+	color: #AEAEB2;
+}
 
-    .table-title { font-size: 13px; font-weight: 650; color: #1C1C1E; letter-spacing: -0.3px; }
+.content {
+	padding: 24px 28px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
 
-    .count-tag {
-      background: #F2F2F7; border-radius: 6px;
-      padding: 2px 9px; font-size: 11px; font-weight: 500; color: #6C6C70;
-    }
+/* STATS */
+.stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+}
 
-    .tbl { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+.stat-card {
+	background: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 13px;
+	padding: 16px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
 
-    .tbl thead th {
-      padding: 9px 16px; text-align: left;
-      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-      color: #C7C7CC; font-weight: 600;
-      border-bottom: 1px solid rgba(0,0,0,0.05); background: #FAFAFA;
-    }
+.stat-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
 
-    .tbl tbody td {
-      padding: 12px 16px; color: #1C1C1E;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      vertical-align: middle;
-    }
+.stat-icon {
+	width: 30px;
+	height: 30px;
+	border-radius: 8px;
+	background: #F2F2F7;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+	color: #6C6C70;
+}
 
-    .tbl tbody tr:last-child td { border-bottom: none; }
-    .tbl tbody tr:hover td { background: #FAFAFA; }
-    .td-muted { color: #AEAEB2 !important; }
+.stat-num {
+	font-size: 22px;
+	font-weight: 700;
+	color: #1C1C1E;
+	letter-spacing: -0.8px;
+}
 
-    .ava-sm {
-      width: 26px; height: 26px; border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 700;
-      margin-right: 7px; vertical-align: middle;
-      background: #F2F2F7; color: #6C6C70;
-    }
+.stat-lbl {
+	font-size: 11px;
+	color: #AEAEB2;
+	margin-top: 2px;
+}
 
-    .badge {
-      display: inline-flex; align-items: center;
-      padding: 2px 8px; border-radius: 6px;
-      font-size: 10px; font-weight: 600;
-    }
+/* TABLE */
+.table-card {
+	background: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 14px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
 
-    .b-admin  { background: #1C1C1E; color: white; }
-    .b-user   { background: #F2F2F7; color: #6C6C70; }
-    .b-active { background: #F0FAF4; color: #28B348; }
-    .b-inactive { background: #FFF1F0; color: #FF3B30; }
-  </style>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-  
+.table-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 18px 11px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.table-title {
+	font-size: 13px;
+	font-weight: 650;
+	color: #1C1C1E;
+	letter-spacing: -0.3px;
+}
+
+.count-tag {
+	background: #F2F2F7;
+	border-radius: 6px;
+	padding: 2px 9px;
+	font-size: 11px;
+	font-weight: 500;
+	color: #6C6C70;
+}
+
+.tbl {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12px;
+	table-layout: fixed;
+}
+
+.tbl thead th {
+	padding: 9px 16px;
+	text-align: left;
+	font-size: 10px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: #C7C7CC;
+	font-weight: 600;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	background: #FAFAFA;
+}
+
+.tbl tbody td {
+	padding: 12px 16px;
+	color: #1C1C1E;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.tbl tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.tbl tbody tr:hover td {
+	background: #FAFAFA;
+}
+
+.td-muted {
+	color: #AEAEB2 !important;
+}
+
+.ava-sm {
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 9px;
+	font-weight: 700;
+	margin-right: 7px;
+	vertical-align: middle;
+	background: #F2F2F7;
+	color: #6C6C70;
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 6px;
+	font-size: 10px;
+	font-weight: 600;
+}
+
+.b-admin {
+	background: #1C1C1E;
+	color: white;
+}
+
+.b-user {
+	background: #F2F2F7;
+	color: #6C6C70;
+}
+
+.b-active {
+	background: #F0FAF4;
+	color: #28B348;
+}
+
+.b-inactive {
+	background: #FFF1F0;
+	color: #FF3B30;
+}
+</style>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="brand">
-    <div class="logo-mark">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M7 1.5L12 4.5V9.5L7 12.5L2 9.5V4.5L7 1.5Z" fill="white"/>
+	<!-- SIDEBAR -->
+	<div class="sidebar">
+		<div class="brand">
+			<div class="logo-mark">
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1.5L12 4.5V9.5L7 12.5L2 9.5V4.5L7 1.5Z" fill="white" />
       </svg>
-    </div>
-    <span class="brand-name">Storm Cash</span>
-  </div>
+			</div>
+			<span class="brand-name">Storm Cash</span>
+		</div>
 
-  <div class="nav-section">
-    <span class="nav-lbl">Admin</span>
-    <a href="AdminController?action=showDashboard" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-    <a href="AdminController?action=showAllAccounts" class="nav-item"><i class="ti ti-users"></i> All Accounts</a>
-  </div>
+		<div class="nav-section">
+			<span class="nav-lbl">Admin</span> <a
+				href="AdminController?action=showDashboard" class="nav-item active"><i
+				class="ti ti-layout-dashboard"></i> Dashboard</a> <a
+				href="AdminController?action=showAllAccounts" class="nav-item"><i
+				class="ti ti-users"></i> All Accounts</a>
+		</div>
 
-  <div class="nav-section">
-    <span class="nav-lbl">My Wallet</span>
-    <a href="WalletController?action=showDepositPage" class="nav-item"><i class="ti ti-arrow-down-circle"></i> Deposit</a>
-    <a href="WalletController?action=showWithdrawPage" class="nav-item"><i class="ti ti-arrow-up-circle"></i> Withdraw</a>
-    <a href="WalletController?action=showTransferPage" class="nav-item"><i class="ti ti-transfer"></i> Transfer</a>
-    <a href="WalletController?action=showTransactionsPage" class="nav-item"><i class="ti ti-history"></i> Transactions</a>
-  </div>
+		<div class="nav-section">
+			<span class="nav-lbl">My Wallet</span> <a
+				href="WalletController?action=showDepositPage" class="nav-item"><i
+				class="ti ti-arrow-down-circle"></i> Deposit</a> <a
+				href="WalletController?action=showWithdrawPage" class="nav-item"><i
+				class="ti ti-arrow-up-circle"></i> Withdraw</a> <a
+				href="WalletController?action=showTransferPage" class="nav-item"><i
+				class="ti ti-transfer"></i> Transfer</a> <a
+				href="WalletController?action=showTransactionsPage" class="nav-item"><i
+				class="ti ti-history"></i> Transactions</a>
+		</div>
 
-  <div class="nav-section">
-    <span class="nav-lbl">Account</span>
-    <a href="AccountController?action=showChangePasswordPage" class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
-  </div>
+		<div class="nav-section">
+			<span class="nav-lbl">Account</span> <a
+				href="AccountController?action=showChangePasswordPage"
+				class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
+		</div>
 
-	<div class="sidebar-footer">
-	  <div class="user-row" onclick="toggleUserMenu()" style="cursor:pointer;">
-	    <div class="avatar"><%= admin.getFullName().substring(0,1).toUpperCase() %></div>
-	    <div>
-	      <div class="u-name"><%= admin.getFullName().split(" ")[0] %></div>
-	      <div class="u-role">Admin</div>
-	    </div>
-	    <i class="ti ti-chevron-up" id="chevron-icon" style="font-size:13px;color:#AEAEB2;margin-left:auto;"></i>
-	  </div>
-	
-	  <div id="user-dropdown" style="display:none;background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:10px;margin:0 8px 8px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-	    <a href="AccountController?action=showProfilePage"
-	       style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#3A3A3C;text-decoration:none;">
-	      <i class="ti ti-user" style="font-size:15px;color:#AEAEB2;"></i> Profile
-	    </a>
-	    <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 10px;"></div>
-	    <a href="#" onclick="confirmLogout()"
-	    style="display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#FF3B30;text-decoration:none;">
-	    <i class="ti ti-logout" style="font-size:15px;color:#FF3B30;"></i> Sign Out
-	    </a>
-	  </div>
+		<div class="sidebar-footer">
+			<div class="user-row" onclick="toggleUserMenu()"
+				style="cursor: pointer;">
+				<div class="avatar"><%=admin.getFullName().substring(0, 1).toUpperCase()%></div>
+				<div>
+					<div class="u-name"><%=admin.getFullName().split(" ")[0]%></div>
+					<div class="u-role">Admin</div>
+				</div>
+				<i class="ti ti-chevron-up" id="chevron-icon"
+					style="font-size: 13px; color: #AEAEB2; margin-left: auto;"></i>
+			</div>
+
+			<div id="user-dropdown"
+				style="display: none; background: #FFFFFF; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 10px; margin: 0 8px 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+				<a href="AccountController?action=showProfilePage"
+					style="display: flex; align-items: center; gap: 9px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #3A3A3C; text-decoration: none;">
+					<i class="ti ti-user" style="font-size: 15px; color: #AEAEB2;"></i>
+					Profile
+				</a>
+				<div
+					style="height: 1px; background: rgba(0, 0, 0, 0.05); margin: 0 10px;"></div>
+				<a href="#" onclick="confirmLogout()"
+					style="display: flex; align-items: center; gap: 9px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #FF3B30; text-decoration: none;">
+					<i class="ti ti-logout" style="font-size: 15px; color: #FF3B30;"></i>
+					Sign Out
+				</a>
+			</div>
+		</div>
+
 	</div>
-	
-</div>
 
 
 
-<!-- MAIN -->
-<div class="main">
+	<!-- MAIN -->
+	<div class="main">
 
-    <div class="topbar">
-        <div>
-            <div class="page-title">Admin DashBoard</div>
-            <div class="page-sub">System Overview & Account Management</div>
-        </div>
+		<div class="topbar">
+			<div>
+				<div class="page-title">Admin DashBoard</div>
+				<div class="page-sub">System Overview & Account Management</div>
+			</div>
 
-        <div class="topbar-right">
-            <div class="admin-tag">
-                <i class="ti ti-shield-check"></i> Admin
-            </div>
+			<div class="topbar-right">
+				<div class="admin-tag">
+					<i class="ti ti-shield-check"></i> Admin
+				</div>
 
-            <a href="#" onclick="confirmLogout()" class="signout-btn">
-                <i class="ti ti-logout"></i> Sign Out
-            </a>
-        </div>
-    </div>
+				<a href="#" onclick="confirmLogout()" class="signout-btn"> <i
+					class="ti ti-logout"></i> Sign Out
+				</a>
+			</div>
+		</div>
 
-    <div class="content">
+		<div class="content">
 
-        <!-- STATS -->
-        <div class="stats">
+			<!-- STATS -->
+			<div class="stats">
 
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-lbl">Total Accounts</div>
-                    <div class="stat-icon"><i class="ti ti-users"></i></div>
-                </div>
-                <div class="stat-num"><%= totalAccounts %></div>
-            </div>
+				<div class="stat-card">
+					<div class="stat-top">
+						<div class="stat-lbl">Total Accounts</div>
+						<div class="stat-icon">
+							<i class="ti ti-users"></i>
+						</div>
+					</div>
+					<div class="stat-num"><%=totalAccounts%></div>
+				</div>
 
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-lbl">Active</div>
-                    <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
-                </div>
-                <div class="stat-num"><%= activeCount %></div>
-            </div>
+				<div class="stat-card">
+					<div class="stat-top">
+						<div class="stat-lbl">Active</div>
+						<div class="stat-icon">
+							<i class="ti ti-circle-check"></i>
+						</div>
+					</div>
+					<div class="stat-num"><%=activeCount%></div>
+				</div>
 
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-lbl">Inactive</div>
-                    <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
-                </div>
-                <div class="stat-num"><%= inactiveCount %></div>
-            </div>
+				<div class="stat-card">
+					<div class="stat-top">
+						<div class="stat-lbl">Inactive</div>
+						<div class="stat-icon">
+							<i class="ti ti-circle-x"></i>
+						</div>
+					</div>
+					<div class="stat-num"><%=inactiveCount%></div>
+				</div>
 
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-lbl">Total Balance</div>
-                    <div class="stat-icon"><i class="ti ti-wallet"></i></div>
-                </div>
-                <div class="stat-num" style="font-size:17px;margin-top:3px;">
-                    <%= String.format("%,.0f", totalBalance) %>
-                </div>
-            </div>
+				<div class="stat-card">
+					<div class="stat-top">
+						<div class="stat-lbl">Total Balance</div>
+						<div class="stat-icon">
+							<i class="ti ti-wallet"></i>
+						</div>
+					</div>
+					<div class="stat-num" style="font-size: 17px; margin-top: 3px;">
+						<%=String.format("%,.0f", totalBalance)%>
+					</div>
+				</div>
 
-        </div>
+			</div>
 
-        <!-- TABLE -->
-        <div class="table-card">
+			<!-- CHARTS -->
+			<div
+				style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px;">
 
-            <div class="table-head">
-                <span class="table-title">All Accounts</span>
-                <span class="count-tag"><%= totalAccounts %> accounts</span>
-            </div>
+				<!-- Doughnut -->
+				<div
+					style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, .06); border-radius: 14px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, .04);">
 
-            <table class="tbl">
+					<div style="font-size: 13px; font-weight: 650;">Account
+						Status</div>
+					<div style="font-size: 11px; color: #AEAEB2; margin-bottom: 12px;">Active
+						vs Inactive</div>
 
-                <thead>
-                <tr>
-                    <th style="width:22%;">Name</th>
-                    <th style="width:15%;">UserName</th>
-                    <th style="width:16%;">Phone</th>
-                    <th style="width:21%;">E-Mail</th>
-                    <th style="width:14%;text-align:right;">Balance</th>
-                    <th style="width:8%;text-align:center;">Role</th>
-                    <th style="width:9%;text-align:center;">Status</th>
-                </tr>
-                </thead>
+					<div
+						style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 12px; color: #6C6C70;">
 
-                <tbody>
+						<span style="display: flex; align-items: center; gap: 5px;">
+							<span
+							style="width: 10px; height: 10px; background: #34C759; border-radius: 2px;"></span>
+							Active
+						</span> <span style="display: flex; align-items: center; gap: 5px;">
+							<span
+							style="width: 10px; height: 10px; background: #FF3B30; border-radius: 2px;"></span>
+							Inactive
+						</span>
 
-                <% if (allAccounts != null) {
-                    for (Account acc : allAccounts) { %>
+					</div>
 
-                <tr>
+					<div style="height: 220px;">
+						<canvas id="statusChart"></canvas>
+					</div>
 
-                    <td>
-                        <span class="ava-sm"><%= acc.getFullName().substring(0,1).toUpperCase() %></span>
-                        <%= acc.getFullName() %>
-                    </td>
+				</div>
+				<!-- Bar -->
+				<div
+					style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, .06); border-radius: 14px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, .04);">
 
-                    <td class="td-muted"><%= acc.getUsername() %></td>
+					<div style="font-size: 13px; font-weight: 650;">Balance
+						Distribution</div>
+					<div style="font-size: 11px; color: #AEAEB2; margin-bottom: 12px;">Per
+						account (EGP)</div>
 
-                    <td class="td-muted"><%= acc.getPhone() %></td>
+					<div style="height: 220px;">
+						<canvas id="balanceChart"></canvas>
+					</div>
 
-                    <td class="td-muted" style="font-size:11px;">
-                        <%= acc.getEmail() != null ? acc.getEmail() : "—" %>
-                    </td>
+				</div>
 
-                    <td style="text-align:right;font-weight:600;">
-                        <%= String.format("%,.2f", acc.getBalance()) %>
-                    </td>
+			</div>
 
-                    <td style="text-align:center;">
-                        <span class="badge <%= acc.getRole().equalsIgnoreCase("ADMIN") ? "b-admin" : "b-user" %>">
-                            <%= acc.getRole() %>
-                        </span>
-                    </td>
+		</div>
 
-                    <td style="text-align:center;">
-                        <span class="badge <%= acc.isActive() ? "b-active" : "b-inactive" %>">
-                            <%= acc.isActive() ? "Active" : "Inactive" %>
-                        </span>
-                    </td>
-
-                </tr>
-
-                <% }} %>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <!-- CHARTS -->
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px;">
-
-            <!-- Doughnut -->
-            <div style="background:#FFFFFF;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-
-                <div style="font-size:13px;font-weight:650;">Account Status</div>
-                <div style="font-size:11px;color:#AEAEB2;margin-bottom:12px;">Active vs Inactive</div>
-
-                <div style="display:flex;gap:16px;margin-bottom:12px;font-size:12px;color:#6C6C70;">
-                    <span style="display:flex;align-items:center;gap:5px;">
-                        <span style="width:10px;height:10px;background:#1C1C1E;border-radius:2px;"></span>
-                        Active
-                    </span>
-
-                    <span style="display:flex;align-items:center;gap:5px;">
-                        <span style="width:10px;height:10px;background:#E5E5EA;border-radius:2px;"></span>
-                        Inactive
-                    </span>
-                </div>
-
-                <div style="height:220px;">
-                    <canvas id="statusChart"></canvas>
-                </div>
-
-            </div>
-
-            <!-- Bar -->
-            <div style="background:#FFFFFF;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-
-                <div style="font-size:13px;font-weight:650;">Balance Distribution</div>
-                <div style="font-size:11px;color:#AEAEB2;margin-bottom:12px;">Per account (EGP)</div>
-
-                <div style="height:220px;">
-                    <canvas id="balanceChart"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
+	</div>
 
 
-<div id="logout-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:#FFFFFF;border-radius:16px;padding:28px 24px;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;">
-    <div style="width:44px;height:44px;border-radius:12px;background:#F2F2F7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;color:#1C1C1E;">
-      <i class="ti ti-logout"></i>
-    </div>
-    <div style="font-size:16px;font-weight:700;color:#1C1C1E;letter-spacing:-0.3px;margin-bottom:6px;">Sign out?</div>
-    <div style="font-size:13px;color:#AEAEB2;margin-bottom:22px;">You'll need to sign in again to access your account.</div>
-    <div style="display:flex;gap:8px;">
-      <button onclick="closeLogout()" style="flex:1;padding:11px;background:#F2F2F7;border:none;border-radius:10px;font-size:13px;font-weight:600;color:#3A3A3C;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
-      <button onclick="doLogout()" style="flex:1;padding:11px;background:#1C1C1E;border:none;border-radius:10px;font-size:13px;font-weight:600;color:white;cursor:pointer;font-family:'Inter',sans-serif;">Sign out</button>
-    </div>
-  </div>
-</div>
+	<div id="logout-overlay"
+		style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center;">
+		<div
+			style="background: #FFFFFF; border-radius: 16px; padding: 28px 24px; width: 320px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); text-align: center;">
+			<div
+				style="width: 44px; height: 44px; border-radius: 12px; background: #F2F2F7; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 20px; color: #1C1C1E;">
+				<i class="ti ti-logout"></i>
+			</div>
+			<div
+				style="font-size: 16px; font-weight: 700; color: #1C1C1E; letter-spacing: -0.3px; margin-bottom: 6px;">Sign
+				out?</div>
+			<div style="font-size: 13px; color: #AEAEB2; margin-bottom: 22px;">You'll
+				need to sign in again to access your account.</div>
+			<div style="display: flex; gap: 8px;">
+				<button onclick="closeLogout()"
+					style="flex: 1; padding: 11px; background: #F2F2F7; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; color: #3A3A3C; cursor: pointer; font-family: 'Inter', sans-serif;">Cancel</button>
+				<button onclick="doLogout()"
+					style="flex: 1; padding: 11px; background: #1C1C1E; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; color: white; cursor: pointer; font-family: 'Inter', sans-serif;">Sign
+					out</button>
+			</div>
+		</div>
+	</div>
 
-<script>
+	<script>
   function toggleUserMenu() {
     const menu = document.getElementById('user-dropdown');
     const icon = document.getElementById('chevron-icon');
@@ -482,37 +695,49 @@
 	
 	
 	// Charts
-	const activeCount  = <%= activeCount %>;
-	const inactiveCount = <%= inactiveCount %>;
+	const activeCount  = <%=activeCount%>;
+	const inactiveCount = <%=inactiveCount%>;
 
 	new Chart(document.getElementById('statusChart'), {
-	  type: 'doughnut',
-	  data: {
-	    labels: ['Active', 'Inactive'],
-	    datasets: [{
-	      data: [activeCount, inactiveCount],
-	      backgroundColor: ['#1C1C1E', '#E5E5EA'],
-	      borderWidth: 2,
-	      borderColor: '#FFFFFF'
-	    }]
-	  },
-	  options: {
-	    responsive: true,
-	    maintainAspectRatio: false,
-	    cutout: '65%',
-	    plugins: {
-	      legend: { display: false },
-	      tooltip: {
-	        callbacks: {
-	          label: (ctx) => ' ' + ctx.label + ': ' + ctx.raw + ' accounts'
+	    type: 'doughnut',
+	    data: {
+	        labels: ['Active', 'Inactive'],
+	        datasets: [{
+	            data: [activeCount, inactiveCount],
+	            backgroundColor: [
+	                '#34C759', // Active (Green)
+	                '#FF3B30'  // Inactive (Red)
+	            ],
+	            borderColor: '#FFFFFF',
+	            borderWidth: 2,
+	            hoverOffset: 8
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	        maintainAspectRatio: false,
+	        cutout: '65%',
+	        plugins: {
+	            legend: {
+	                display: false
+	            },
+	            tooltip: {
+	                callbacks: {
+	                    label: function(context) {
+	                        return context.label + ': ' + context.raw + ' Accounts';
+	                    }
+	                }
+	            }
 	        }
-	      }
 	    }
-	  }
 	});
 
-	const labels  = [<% if(allAccounts!=null){for(Account a:allAccounts){%>'<%= a.getUsername() %>',<%}}%>];
-	const balances = [<% if(allAccounts!=null){for(Account a:allAccounts){%><%= a.getBalance() %>,<%}}%>];
+	const labels  = [<%if (allAccounts != null) {
+	for (Account a : allAccounts) {%>'<%=a.getUsername()%>',<%}
+}%>];
+	const balances = [<%if (allAccounts != null) {
+for (Account a : allAccounts) {%><%=a.getBalance()%>,<%}
+}%>];
 
 	new Chart(document.getElementById('balanceChart'), {
 	  type: 'bar',
