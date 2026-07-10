@@ -199,6 +199,9 @@
     .b-active { background: #F0FAF4; color: #28B348; }
     .b-inactive { background: #FFF1F0; color: #FF3B30; }
   </style>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  
 </head>
 <body>
 
@@ -257,99 +260,182 @@
 	
 </div>
 
+
+
 <!-- MAIN -->
 <div class="main">
-  <div class="topbar">
-    <div>
-      <div class="page-title">Admin DashBoard</div>
-      <div class="page-sub">System Overview & Account Management</div>
-    </div>
-    <div class="topbar-right">
-      <div class="admin-tag"><i class="ti ti-shield-check"></i> Admin</div>
-      <a href="#" onclick="confirmLogout()" class="signout-btn"><i class="ti ti-logout"></i> Sign Out</a>
-    </div>
-  </div>
 
-  <div class="content">
+    <div class="topbar">
+        <div>
+            <div class="page-title">Admin DashBoard</div>
+            <div class="page-sub">System Overview & Account Management</div>
+        </div>
 
-    <!-- STATS -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-lbl">Total Accounts</div>
-          <div class="stat-icon"><i class="ti ti-users"></i></div>
+        <div class="topbar-right">
+            <div class="admin-tag">
+                <i class="ti ti-shield-check"></i> Admin
+            </div>
+
+            <a href="#" onclick="confirmLogout()" class="signout-btn">
+                <i class="ti ti-logout"></i> Sign Out
+            </a>
         </div>
-        <div class="stat-num"><%= totalAccounts %></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-lbl">Active</div>
-          <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
-        </div>
-        <div class="stat-num"><%= activeCount %></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-lbl">Inactive</div>
-          <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
-        </div>
-        <div class="stat-num"><%= inactiveCount %></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-lbl">Total Balance</div>
-          <div class="stat-icon"><i class="ti ti-wallet"></i></div>
-        </div>
-        <div class="stat-num" style="font-size:17px;margin-top:3px;"><%= String.format("%,.0f", totalBalance) %></div>
-      </div>
     </div>
 
-    <!-- TABLE -->
-    <div class="table-card">
-      <div class="table-head">
-        <span class="table-title">All Accounts</span>
-        <span class="count-tag"><%= totalAccounts %> accounts</span>
-      </div>
-      <table class="tbl">
-        <thead>
-          <tr>
-            <th style="width:22%;">Name</th>
-            <th style="width:15%;">UserName</th>
-            <th style="width:16%;">Phone</th>
-            <th style="width:21%;">E-Mail</th>
-            <th style="width:14%;text-align:right;">Balance</th>
-            <th style="width:8%;text-align:center;">Role</th>
-            <th style="width:9%;text-align:center;">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (allAccounts != null) { for (Account acc : allAccounts) { %>
-          <tr>
-            <td>
-              <span class="ava-sm"><%= acc.getFullName().substring(0,1).toUpperCase() %></span>
-              <%= acc.getFullName() %>
-            </td>
-            <td class="td-muted"><%= acc.getUsername() %></td>
-            <td class="td-muted"><%= acc.getPhone() %></td>
-            <td class="td-muted" style="font-size:11px;"><%= acc.getEmail() != null ? acc.getEmail() : "—" %></td>
-            <td style="text-align:right;font-weight:600;"><%= String.format("%,.2f", acc.getBalance()) %></td>
-            <td style="text-align:center;">
-              <span class="badge <%= acc.getRole().equalsIgnoreCase("ADMIN") ? "b-admin" : "b-user" %>">
-                <%= acc.getRole() %>
-              </span>
-            </td>
-            <td style="text-align:center;">
-              <span class="badge <%= acc.isActive() ? "b-active" : "b-inactive" %>">
-                <%= acc.isActive() ? "Active" : "Inactive" %>
-              </span>
-            </td>
-          </tr>
-          <% } } %>
-        </tbody>
-      </table>
+    <div class="content">
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-lbl">Total Accounts</div>
+                    <div class="stat-icon"><i class="ti ti-users"></i></div>
+                </div>
+                <div class="stat-num"><%= totalAccounts %></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-lbl">Active</div>
+                    <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+                </div>
+                <div class="stat-num"><%= activeCount %></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-lbl">Inactive</div>
+                    <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
+                </div>
+                <div class="stat-num"><%= inactiveCount %></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-lbl">Total Balance</div>
+                    <div class="stat-icon"><i class="ti ti-wallet"></i></div>
+                </div>
+                <div class="stat-num" style="font-size:17px;margin-top:3px;">
+                    <%= String.format("%,.0f", totalBalance) %>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+
+            <div class="table-head">
+                <span class="table-title">All Accounts</span>
+                <span class="count-tag"><%= totalAccounts %> accounts</span>
+            </div>
+
+            <table class="tbl">
+
+                <thead>
+                <tr>
+                    <th style="width:22%;">Name</th>
+                    <th style="width:15%;">UserName</th>
+                    <th style="width:16%;">Phone</th>
+                    <th style="width:21%;">E-Mail</th>
+                    <th style="width:14%;text-align:right;">Balance</th>
+                    <th style="width:8%;text-align:center;">Role</th>
+                    <th style="width:9%;text-align:center;">Status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <% if (allAccounts != null) {
+                    for (Account acc : allAccounts) { %>
+
+                <tr>
+
+                    <td>
+                        <span class="ava-sm"><%= acc.getFullName().substring(0,1).toUpperCase() %></span>
+                        <%= acc.getFullName() %>
+                    </td>
+
+                    <td class="td-muted"><%= acc.getUsername() %></td>
+
+                    <td class="td-muted"><%= acc.getPhone() %></td>
+
+                    <td class="td-muted" style="font-size:11px;">
+                        <%= acc.getEmail() != null ? acc.getEmail() : "—" %>
+                    </td>
+
+                    <td style="text-align:right;font-weight:600;">
+                        <%= String.format("%,.2f", acc.getBalance()) %>
+                    </td>
+
+                    <td style="text-align:center;">
+                        <span class="badge <%= acc.getRole().equalsIgnoreCase("ADMIN") ? "b-admin" : "b-user" %>">
+                            <%= acc.getRole() %>
+                        </span>
+                    </td>
+
+                    <td style="text-align:center;">
+                        <span class="badge <%= acc.isActive() ? "b-active" : "b-inactive" %>">
+                            <%= acc.isActive() ? "Active" : "Inactive" %>
+                        </span>
+                    </td>
+
+                </tr>
+
+                <% }} %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- CHARTS -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px;">
+
+            <!-- Doughnut -->
+            <div style="background:#FFFFFF;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+
+                <div style="font-size:13px;font-weight:650;">Account Status</div>
+                <div style="font-size:11px;color:#AEAEB2;margin-bottom:12px;">Active vs Inactive</div>
+
+                <div style="display:flex;gap:16px;margin-bottom:12px;font-size:12px;color:#6C6C70;">
+                    <span style="display:flex;align-items:center;gap:5px;">
+                        <span style="width:10px;height:10px;background:#1C1C1E;border-radius:2px;"></span>
+                        Active
+                    </span>
+
+                    <span style="display:flex;align-items:center;gap:5px;">
+                        <span style="width:10px;height:10px;background:#E5E5EA;border-radius:2px;"></span>
+                        Inactive
+                    </span>
+                </div>
+
+                <div style="height:220px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+            </div>
+
+            <!-- Bar -->
+            <div style="background:#FFFFFF;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+
+                <div style="font-size:13px;font-weight:650;">Balance Distribution</div>
+                <div style="font-size:11px;color:#AEAEB2;margin-bottom:12px;">Per account (EGP)</div>
+
+                <div style="height:220px;">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
+
 </div>
+
 
 <div id="logout-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:#FFFFFF;border-radius:16px;padding:28px 24px;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;">
@@ -393,6 +479,65 @@
 	function doLogout() {
 	    window.location.href = "AuthController?action=logout";
 	}
+	
+	
+	// Charts
+	const activeCount  = <%= activeCount %>;
+	const inactiveCount = <%= inactiveCount %>;
+
+	new Chart(document.getElementById('statusChart'), {
+	  type: 'doughnut',
+	  data: {
+	    labels: ['Active', 'Inactive'],
+	    datasets: [{
+	      data: [activeCount, inactiveCount],
+	      backgroundColor: ['#1C1C1E', '#E5E5EA'],
+	      borderWidth: 2,
+	      borderColor: '#FFFFFF'
+	    }]
+	  },
+	  options: {
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    cutout: '65%',
+	    plugins: {
+	      legend: { display: false },
+	      tooltip: {
+	        callbacks: {
+	          label: (ctx) => ' ' + ctx.label + ': ' + ctx.raw + ' accounts'
+	        }
+	      }
+	    }
+	  }
+	});
+
+	const labels  = [<% if(allAccounts!=null){for(Account a:allAccounts){%>'<%= a.getUsername() %>',<%}}%>];
+	const balances = [<% if(allAccounts!=null){for(Account a:allAccounts){%><%= a.getBalance() %>,<%}}%>];
+
+	new Chart(document.getElementById('balanceChart'), {
+	  type: 'bar',
+	  data: {
+	    labels: labels,
+	    datasets: [{
+	      data: balances,
+	      backgroundColor: '#1C1C1E',
+	      borderRadius: 4,
+	      barThickness: 24
+	    }]
+	  },
+	  options: {
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    plugins: { legend: { display: false } },
+	    scales: {
+	      x: { grid: { display: false }, ticks: { color: '#AEAEB2', font: { size: 11 } } },
+	      y: {
+	        grid: { color: '#F2F2F7' },
+	        ticks: { color: '#AEAEB2', font: { size: 11 }, callback: (v) => 'EGP ' + v.toLocaleString() }
+	      }
+	    }
+	  }
+	});
 	
 </script>
 
