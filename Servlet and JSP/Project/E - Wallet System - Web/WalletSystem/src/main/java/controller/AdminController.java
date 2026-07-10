@@ -38,9 +38,13 @@ public class AdminController extends HttpServlet {
 
         switch (action != null ? action : "showDashboard") {
             case "showDashboard":
-            case "showAllAccounts":
                 handleShowDashboard(request, response);
                 break;
+                
+            case "showAllAccounts":
+                handleShowAllAccounts(request, response);
+                break;
+                
             default:
                 handleShowDashboard(request, response);
         }
@@ -55,4 +59,16 @@ public class AdminController extends HttpServlet {
         request.setAttribute("allAccounts", allAccounts);
         request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
     }
+    
+    
+    private void handleShowAllAccounts(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+        List<Account> allAccounts = accountService.findAll();
+
+        request.setAttribute("allAccounts", allAccounts);
+        request.getRequestDispatcher("allAccounts.jsp").forward(request, response);
+    }
+    
 }

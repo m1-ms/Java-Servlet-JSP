@@ -268,7 +268,7 @@
 	
 	
   <div class="nav-section">
-    <span class="nav-lbl">Menu</span>
+    <span class="nav-lbl">My Wallet</span>
     <a href="DashboardController" class="nav-item active"><i class="ti ti-home"></i> Dash Board</a>
     <a href="WalletController?action=showDepositPage" class="nav-item"><i class="ti ti-arrow-down-circle"></i> Deposit</a>
     <a href="WalletController?action=showWithdrawPage" class="nav-item"><i class="ti ti-arrow-up-circle"></i> Withdraw</a>
