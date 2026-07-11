@@ -24,6 +24,8 @@ double totalBalance = allAccounts != null ? allAccounts.stream().mapToDouble(Acc
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 * {
 	box-sizing: border-box;
@@ -157,6 +159,7 @@ body {
 	gap: 9px;
 	padding: 8px;
 	border-radius: 9px;
+	cursor: pointer;
 }
 
 .avatar {
@@ -184,13 +187,12 @@ body {
 	color: #AEAEB2;
 }
 
-/* MAIN */
 .main {
 	flex: 1;
-	display: flex;
-	flex-direction: column;
 	margin-left: 216px;
 	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 .topbar {
@@ -237,10 +239,6 @@ body {
 	color: white;
 }
 
-.admin-tag i {
-	font-size: 12px;
-}
-
 .signout-btn {
 	display: flex;
 	align-items: center;
@@ -252,11 +250,11 @@ body {
 	font-size: 12px;
 	font-weight: 500;
 	color: #3A3A3C;
+	text-decoration: none;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	transition: background 0.12s;
 	cursor: pointer;
 	font-family: 'Inter', sans-serif;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-	text-decoration: none;
-	transition: background 0.12s;
 }
 
 .signout-btn:hover {
@@ -273,6 +271,101 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+}
+
+/* ADMIN INFO CARD */
+.admin-card {
+	background: #1C1C1E;
+	border-radius: 16px;
+	padding: 24px 28px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: relative;
+	overflow: hidden;
+}
+
+.admin-card::before {
+	content: '';
+	position: absolute;
+	top: -50px;
+	right: -50px;
+	width: 180px;
+	height: 180px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.025);
+	pointer-events: none;
+}
+
+.admin-avatar {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.1);
+	border: 2px solid rgba(255, 255, 255, 0.15);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	font-weight: 700;
+	color: white;
+	flex-shrink: 0;
+}
+
+.admin-info {
+	flex: 1;
+	margin-left: 16px;
+}
+
+.admin-name {
+	font-size: 20px;
+	font-weight: 700;
+	color: white;
+	letter-spacing: -0.5px;
+}
+
+.admin-username {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.45);
+	margin-top: 3px;
+}
+
+.admin-details {
+	display: flex;
+	gap: 24px;
+	margin-top: 12px;
+}
+
+.admin-detail {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.admin-detail-lbl {
+	font-size: 10px;
+	color: rgba(255, 255, 255, 0.3);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.admin-detail-val {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.8);
+	font-weight: 500;
+}
+
+.admin-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 13px;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.7);
 }
 
 /* STATS */
@@ -322,128 +415,48 @@ body {
 	margin-top: 2px;
 }
 
-/* TABLE */
-.table-card {
+/* CHARTS */
+.charts-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.chart-card {
 	background: #FFFFFF;
 	border: 1px solid rgba(0, 0, 0, 0.06);
 	border-radius: 14px;
-	overflow: hidden;
+	padding: 20px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.table-head {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 14px 18px 11px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.table-title {
+.chart-title {
 	font-size: 13px;
 	font-weight: 650;
 	color: #1C1C1E;
-	letter-spacing: -0.3px;
+	margin-bottom: 4px;
 }
 
-.count-tag {
-	background: #F2F2F7;
-	border-radius: 6px;
-	padding: 2px 9px;
+.chart-sub {
 	font-size: 11px;
-	font-weight: 500;
-	color: #6C6C70;
+	color: #AEAEB2;
+	margin-bottom: 12px;
 }
 
-.tbl {
-	width: 100%;
-	border-collapse: collapse;
+.chart-legend {
+	display: flex;
+	gap: 16px;
+	margin-bottom: 12px;
 	font-size: 12px;
-	table-layout: fixed;
-}
-
-.tbl thead th {
-	padding: 9px 16px;
-	text-align: left;
-	font-size: 10px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: #C7C7CC;
-	font-weight: 600;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-	background: #FAFAFA;
-}
-
-.tbl tbody td {
-	padding: 12px 16px;
-	color: #1C1C1E;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	vertical-align: middle;
-}
-
-.tbl tbody tr:last-child td {
-	border-bottom: none;
-}
-
-.tbl tbody tr:hover td {
-	background: #FAFAFA;
-}
-
-.td-muted {
-	color: #AEAEB2 !important;
-}
-
-.ava-sm {
-	width: 26px;
-	height: 26px;
-	border-radius: 50%;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 9px;
-	font-weight: 700;
-	margin-right: 7px;
-	vertical-align: middle;
-	background: #F2F2F7;
 	color: #6C6C70;
 }
 
-.badge {
-	display: inline-flex;
-	align-items: center;
-	padding: 2px 8px;
-	border-radius: 6px;
-	font-size: 10px;
-	font-weight: 600;
-}
-
-.b-admin {
-	background: #1C1C1E;
-	color: white;
-}
-
-.b-user {
-	background: #F2F2F7;
-	color: #6C6C70;
-}
-
-.b-active {
-	background: #F0FAF4;
-	color: #28B348;
-}
-
-.b-inactive {
-	background: #FFF1F0;
-	color: #FF3B30;
+.legend-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 2px;
 }
 </style>
-
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-
 </head>
 <body>
 
@@ -457,7 +470,6 @@ body {
 			</div>
 			<span class="brand-name">Storm Cash</span>
 		</div>
-
 		<div class="nav-section">
 			<span class="nav-lbl">Admin</span> <a
 				href="AdminController?action=showDashboard" class="nav-item active"><i
@@ -465,7 +477,6 @@ body {
 				href="AdminController?action=showAllAccounts" class="nav-item"><i
 				class="ti ti-users"></i> All Accounts</a>
 		</div>
-
 		<div class="nav-section">
 			<span class="nav-lbl">My Wallet</span> <a
 				href="WalletController?action=showDepositPage" class="nav-item"><i
@@ -477,13 +488,11 @@ body {
 				href="WalletController?action=showTransactionsPage" class="nav-item"><i
 				class="ti ti-history"></i> Transactions</a>
 		</div>
-
 		<div class="nav-section">
 			<span class="nav-lbl">Account</span> <a
 				href="AccountController?action=showChangePasswordPage"
 				class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
 		</div>
-
 		<div class="sidebar-footer">
 			<div class="user-row" onclick="toggleUserMenu()"
 				style="cursor: pointer;">
@@ -495,7 +504,6 @@ body {
 				<i class="ti ti-chevron-up" id="chevron-icon"
 					style="font-size: 13px; color: #AEAEB2; margin-left: auto;"></i>
 			</div>
-
 			<div id="user-dropdown"
 				style="display: none; background: #FFFFFF; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 10px; margin: 0 8px 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
 				<a href="AccountController?action=showProfilePage"
@@ -508,40 +516,63 @@ body {
 				<a href="#" onclick="confirmLogout()"
 					style="display: flex; align-items: center; gap: 9px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #FF3B30; text-decoration: none;">
 					<i class="ti ti-logout" style="font-size: 15px; color: #FF3B30;"></i>
-					Sign Out
+					Sign out
 				</a>
 			</div>
 		</div>
-
 	</div>
-
-
 
 	<!-- MAIN -->
 	<div class="main">
-
 		<div class="topbar">
 			<div>
-				<div class="page-title">Admin DashBoard</div>
-				<div class="page-sub">System Overview & Account Management</div>
+				<div class="page-title">Admin Dash Board</div>
+				<div class="page-sub">System overview & account management</div>
 			</div>
-
 			<div class="topbar-right">
 				<div class="admin-tag">
-					<i class="ti ti-shield-check"></i> Admin
+					<i class="ti ti-shield-check" style="font-size: 12px;"></i> Admin
 				</div>
-
-				<a href="#" onclick="confirmLogout()" class="signout-btn"> <i
-					class="ti ti-logout"></i> Sign Out
-				</a>
+				<button onclick="confirmLogout()" class="signout-btn">
+					<i class="ti ti-logout"></i> Sign out
+				</button>
 			</div>
 		</div>
 
 		<div class="content">
 
+			<!-- ADMIN INFO CARD -->
+			<div class="admin-card">
+				<div style="display: flex; align-items: center; gap: 16px;">
+					<div class="admin-avatar"><%=admin.getFullName().substring(0, 1).toUpperCase()%></div>
+					<div class="admin-info">
+						<div class="admin-name"><%=admin.getFullName()%></div>
+						<div class="admin-username">
+							@<%=admin.getUsername()%></div>
+						<div class="admin-details">
+							<div class="admin-detail">
+								<span class="admin-detail-lbl">Phone</span> <span
+									class="admin-detail-val"><%=admin.getPhone()%></span>
+							</div>
+							<div class="admin-detail">
+								<span class="admin-detail-lbl">Email</span> <span
+									class="admin-detail-val"><%=admin.getEmail()%></span>
+							</div>
+							<div class="admin-detail">
+								<span class="admin-detail-lbl">Balance</span> <span
+									class="admin-detail-val">EGP <%=String.format("%,.2f", admin.getBalance())%></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="admin-badge">
+					<i class="ti ti-shield-check" style="font-size: 13px;"></i>
+					Administrator
+				</div>
+			</div>
+
 			<!-- STATS -->
 			<div class="stats">
-
 				<div class="stat-card">
 					<div class="stat-top">
 						<div class="stat-lbl">Total Accounts</div>
@@ -551,7 +582,6 @@ body {
 					</div>
 					<div class="stat-num"><%=totalAccounts%></div>
 				</div>
-
 				<div class="stat-card">
 					<div class="stat-top">
 						<div class="stat-lbl">Active</div>
@@ -561,7 +591,6 @@ body {
 					</div>
 					<div class="stat-num"><%=activeCount%></div>
 				</div>
-
 				<div class="stat-card">
 					<div class="stat-top">
 						<div class="stat-lbl">Inactive</div>
@@ -571,76 +600,52 @@ body {
 					</div>
 					<div class="stat-num"><%=inactiveCount%></div>
 				</div>
-
 				<div class="stat-card">
 					<div class="stat-top">
-						<div class="stat-lbl">Total Balance</div>
+						<div class="stat-lbl">Total Balances Accounnts</div>
 						<div class="stat-icon">
 							<i class="ti ti-wallet"></i>
 						</div>
 					</div>
 					<div class="stat-num" style="font-size: 17px; margin-top: 3px;">
-						<%=String.format("%,.0f", totalBalance)%>
-					</div>
+						EGP
+						<%=String.format("%,.0f", totalBalance)%></div>
 				</div>
-
 			</div>
 
 			<!-- CHARTS -->
-			<div
-				style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px;">
+			<div class="charts-grid">
 
-				<!-- Doughnut -->
-				<div
-					style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, .06); border-radius: 14px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, .04);">
-
-					<div style="font-size: 13px; font-weight: 650;">Account
-						Status</div>
-					<div style="font-size: 11px; color: #AEAEB2; margin-bottom: 12px;">Active
-						vs Inactive</div>
-
-					<div
-						style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 12px; color: #6C6C70;">
-
-						<span style="display: flex; align-items: center; gap: 5px;">
-							<span
-							style="width: 10px; height: 10px; background: #34C759; border-radius: 2px;"></span>
-							Active
-						</span> <span style="display: flex; align-items: center; gap: 5px;">
-							<span
-							style="width: 10px; height: 10px; background: #FF3B30; border-radius: 2px;"></span>
-							Inactive
-						</span>
-
+				<div class="chart-card">
+					<div class="chart-title">Account Status</div>
+					<div class="chart-sub">Active vs Inactive</div>
+					<div class="chart-legend">
+						<span style="display: flex; align-items: center; gap: 5px;"><span
+							class="legend-dot" style="background: #30D158;"></span>Active</span> <span
+							style="display: flex; align-items: center; gap: 5px;"><span
+							class="legend-dot" style="background: #FF3B30;"></span>Inactive</span>
 					</div>
-
-					<div style="height: 220px;">
-						<canvas id="statusChart"></canvas>
+					<div style="position: relative; width: 100%; height: 200px;">
+						<canvas id="statusChart" role="img"
+							aria-label="Doughnut chart showing active vs inactive accounts">Active vs Inactive</canvas>
 					</div>
-
 				</div>
-				<!-- Bar -->
-				<div
-					style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, .06); border-radius: 14px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, .04);">
 
-					<div style="font-size: 13px; font-weight: 650;">Balance
-						Distribution</div>
-					<div style="font-size: 11px; color: #AEAEB2; margin-bottom: 12px;">Per
-						account (EGP)</div>
-
-					<div style="height: 220px;">
-						<canvas id="balanceChart"></canvas>
+				<div class="chart-card">
+					<div class="chart-title">Balance Distribution</div>
+					<div class="chart-sub">Per account (EGP)</div>
+					<div style="position: relative; width: 100%; height: 220px;">
+						<canvas id="balanceChart" role="img"
+							aria-label="Bar chart showing balance per account">Balance per account</canvas>
 					</div>
-
 				</div>
 
 			</div>
 
 		</div>
-
 	</div>
 
-
+	<!-- LOGOUT DIALOG -->
 	<div id="logout-overlay"
 		style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center;">
 		<div
@@ -682,88 +687,82 @@ body {
   });
 
   function confirmLogout() {
-	    document.getElementById('logout-overlay').style.display = 'flex';
-	}
+    document.getElementById('logout-overlay').style.display = 'flex';
+  }
 
-	function closeLogout() {
-	    document.getElementById('logout-overlay').style.display = 'none';
-	}
+  function closeLogout() {
+    document.getElementById('logout-overlay').style.display = 'none';
+  }
 
-	function doLogout() {
-	    window.location.href = "AuthController?action=logout";
-	}
-	
-	
-	// Charts
-	const activeCount  = <%=activeCount%>;
-	const inactiveCount = <%=inactiveCount%>;
+  function doLogout() {
+    window.location.href = "AuthController?action=logout";
+  }
 
-	new Chart(document.getElementById('statusChart'), {
-	    type: 'doughnut',
-	    data: {
-	        labels: ['Active', 'Inactive'],
-	        datasets: [{
-	            data: [activeCount, inactiveCount],
-	            backgroundColor: [
-	                '#34C759', // Active (Green)
-	                '#FF3B30'  // Inactive (Red)
-	            ],
-	            borderColor: '#FFFFFF',
-	            borderWidth: 2,
-	            hoverOffset: 8
-	        }]
-	    },
-	    options: {
-	        responsive: true,
-	        maintainAspectRatio: false,
-	        cutout: '65%',
-	        plugins: {
-	            legend: {
-	                display: false
-	            },
-	            tooltip: {
-	                callbacks: {
-	                    label: function(context) {
-	                        return context.label + ': ' + context.raw + ' Accounts';
-	                    }
-	                }
-	            }
-	        }
-	    }
-	});
+  // Charts
+  const activeCount   = <%=activeCount%>;
+  const inactiveCount = <%=inactiveCount%>;
 
-	const labels  = [<%if (allAccounts != null) {
+  new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Active', 'Inactive'],
+      datasets: [{
+        data: [activeCount, inactiveCount],
+        backgroundColor: ['#30D158', '#FF3B30'],
+        borderWidth: 2,
+        borderColor: '#FFFFFF'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ' ' + ctx.label + ': ' + ctx.raw + ' accounts'
+          }
+        }
+      }
+    }
+  });
+
+  const labels   = [<%if (allAccounts != null) {
 	for (Account a : allAccounts) {%>'<%=a.getUsername()%>',<%}
 }%>];
-	const balances = [<%if (allAccounts != null) {
+  const balances = [<%if (allAccounts != null) {
 for (Account a : allAccounts) {%><%=a.getBalance()%>,<%}
 }%>];
 
-	new Chart(document.getElementById('balanceChart'), {
-	  type: 'bar',
-	  data: {
-	    labels: labels,
-	    datasets: [{
-	      data: balances,
-	      backgroundColor: '#1C1C1E',
-	      borderRadius: 4,
-	      barThickness: 24
-	    }]
-	  },
-	  options: {
-	    responsive: true,
-	    maintainAspectRatio: false,
-	    plugins: { legend: { display: false } },
-	    scales: {
-	      x: { grid: { display: false }, ticks: { color: '#AEAEB2', font: { size: 11 } } },
-	      y: {
-	        grid: { color: '#F2F2F7' },
-	        ticks: { color: '#AEAEB2', font: { size: 11 }, callback: (v) => 'EGP ' + v.toLocaleString() }
-	      }
-	    }
-	  }
-	});
-	
+  new Chart(document.getElementById('balanceChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: balances,
+        backgroundColor: '#1C1C1E',
+        borderRadius: 4,
+        barThickness: 24
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#AEAEB2', font: { size: 11 } } },
+        y: {
+          grid: { color: '#F2F2F7' },
+          ticks: {
+            color: '#AEAEB2',
+            font: { size: 11 },
+            callback: (v) => 'EGP ' + v.toLocaleString()
+          }
+        }
+      }
+    }
+  });
 </script>
 
 </body>
