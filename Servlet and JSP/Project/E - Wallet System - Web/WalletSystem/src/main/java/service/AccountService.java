@@ -29,7 +29,14 @@ public interface AccountService {
     // Reset Password
     void resetPassword(String userName, String newPassword);
     
+    
+    
+    // Activate Account
+    void activateAccount(String userName);
+    
     // Deactivate Account
     void deactivateAccount(String userName);
 
+
+    
 }

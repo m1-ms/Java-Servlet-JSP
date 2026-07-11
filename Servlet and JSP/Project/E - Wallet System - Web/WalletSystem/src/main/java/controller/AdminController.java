@@ -50,34 +50,40 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("account") == null) {
-			response.sendRedirect("login.jsp");
-			return;
-		}
+	    HttpSession session = request.getSession(false);
+	    if (session == null || session.getAttribute("account") == null) {
+	        response.sendRedirect("login.jsp");
+	        return;
+	    }
 
-		Account admin = (Account) session.getAttribute("account");
-		if (!admin.isAdmin()) {
-			response.sendRedirect("DashboardController");
-			return;
-		}
+	    Account admin = (Account) session.getAttribute("account");
+	    if (!admin.isAdmin()) {
+	        response.sendRedirect("DashboardController");
+	        return;
+	    }
 
-		String action = request.getParameter("action");
+	    String action = request.getParameter("action");
 
-		if ("deactivateAccount".equals(action)) {
-			String userName = request.getParameter("userName");
-			AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
-			accountService.deactivateAccount(userName);
-			response.sendRedirect("AdminController?action=showAllAccounts");
-		} else {
-			response.sendRedirect("AdminController?action=showDashboard");
-		}
+	    if ("deactivateAccount".equals(action)) {
+	        String userName = request.getParameter("userName");
+	        AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+	        accountService.deactivateAccount(userName);
+	        response.sendRedirect("AdminController?action=showAllAccounts");
+	    } else if ("activateAccount".equals(action)) {
+	        String userName = request.getParameter("userName");
+	        AccountServiceImpl accountService = new AccountServiceImpl(dataSource);
+	        accountService.activateAccount(userName);
+	        response.sendRedirect("AdminController?action=showAllAccounts");
+	    } else {
+	        response.sendRedirect("AdminController?action=showDashboard");
+	    }
 	}
-
+	
 	private void handleShowDashboard(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
