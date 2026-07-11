@@ -28,5 +28,8 @@ public interface AccountService {
     
     // Reset Password
     void resetPassword(String userName, String newPassword);
+    
+    // Deactivate Account
+    void deactivateAccount(String userName);
 
 }

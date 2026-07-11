@@ -279,4 +279,18 @@ public class AccountServiceImpl implements AccountService {
     }
     
     
+    // Deactivate Account
+    @Override
+    public void deactivateAccount(String userName) {
+        String sql = "UPDATE ACCOUNTS SET IS_ACTIVE = 0 WHERE USERNAME = ?";
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, userName);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccountException("Database error: " + e.getMessage());
+        }
+    }
+    
+    
 }
