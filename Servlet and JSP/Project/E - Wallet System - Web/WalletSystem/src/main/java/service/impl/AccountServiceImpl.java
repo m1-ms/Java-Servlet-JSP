@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
     // Login
     @Override
     public Account login(String userName, String password) {
-        Account account = findByUserName(userName);
+    	Account account = findByUserName(userName.toLowerCase());
 
         if (account == null)
             throw new AccountException("User not found: " + userName);

@@ -321,7 +321,7 @@ body {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 	display: flex;
 	flex-direction: column;
-	max-height: calc(100vh - 280px);
+	max-height: calc(100vh - 250px);
 }
 
 .table-head {
