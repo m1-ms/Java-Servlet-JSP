@@ -143,6 +143,10 @@ body {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
 }
 
+.nav-item.danger { color: #FF3B30; }
+.nav-item.danger i { color: #FFB3B0; }
+.nav-item.danger:hover { background: #FFF2F1; }
+
 .nav-item.active i {
 	color: #1C1C1E;
 }
@@ -473,10 +477,16 @@ body {
 		<div class="nav-section">
 			<span class="nav-lbl">Admin</span> <a
 				href="AdminController?action=showDashboard" class="nav-item active"><i
-				class="ti ti-layout-dashboard"></i> Dashboard</a> <a
+				class="ti ti-layout-dashboard"></i> Dash Board</a> <a
 				href="AdminController?action=showAllAccounts" class="nav-item"><i
 				class="ti ti-users"></i> All Accounts</a>
 		</div>
+		
+		<div class="nav-section">
+		    <span class="nav-lbl">My Dash Board</span>
+		    <a href="DashboardController" class="nav-item"><i class="ti ti-home"></i> Dash Board</a>
+		</div>
+		
 		<div class="nav-section">
 			<span class="nav-lbl">My Wallet</span> <a
 				href="WalletController?action=showDepositPage" class="nav-item"><i
@@ -488,11 +498,14 @@ body {
 				href="WalletController?action=showTransactionsPage" class="nav-item"><i
 				class="ti ti-history"></i> Transactions</a>
 		</div>
+
 		<div class="nav-section">
-			<span class="nav-lbl">Account</span> <a
-				href="AccountController?action=showChangePasswordPage"
-				class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
+		    <span class="nav-lbl">Account</span>
+		    <a href="AccountController?action=showProfilePage"        class="nav-item"><i class="ti ti-user"></i> Profile</a>
+		    <a href="AccountController?action=showChangePasswordPage" class="nav-item"><i class="ti ti-lock"></i> Change Password</a>
+		    <a href="AccountController?action=showDeletePage"         class="nav-item danger"><i class="ti ti-trash"></i> Delete Account</a>
 		</div>
+
 		<div class="sidebar-footer">
 			<div class="user-row" onclick="toggleUserMenu()"
 				style="cursor: pointer;">
@@ -602,7 +615,7 @@ body {
 				</div>
 				<div class="stat-card">
 					<div class="stat-top">
-						<div class="stat-lbl">Total Balances Accounnts</div>
+						<div class="stat-lbl">Total Balances Accounts</div>
 						<div class="stat-icon">
 							<i class="ti ti-wallet"></i>
 						</div>
