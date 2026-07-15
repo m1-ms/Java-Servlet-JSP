@@ -377,30 +377,37 @@ public class AuthController extends HttpServlet {
         String identifier = request.getParameter("identifier");
 
         if (identifier == null || identifier.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Email or UserName is required.");
+            request.setAttribute("errorMessage", "Email or Username is required.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+
+        User user = userService.getUserByEmailOrUsername(identifier.trim());
+        if (user == null) {
+            request.setAttribute("errorMessage", "No account found with these details.");
             request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
             return;
         }
 
         int otp = (int)(Math.random() * 900000) + 100000;
 
-        boolean saved = userService.saveOTP(identifier.trim(), otp);
+        boolean saved = userService.saveOTP(user.getEmail(), otp);
         if (!saved) {
-            request.setAttribute("errorMessage", "Email not found. Please try again.");
+            request.setAttribute("errorMessage", "Failed to save OTP. Please try again.");
             request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
             return;
         }
 
         try {
-            EmailService.sendOTP(identifier.trim(), String.valueOf(otp));
+            EmailService.sendOTP(user.getEmail(), String.valueOf(otp));
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Failed to send OTP. Please try again.");
             request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
             return;
         }
 
-        request.getSession().setAttribute("resetEmail", identifier.trim());
-        request.getSession().setAttribute("successMessage", "OTP sent to your email! Check your inbox ✅");
+        request.getSession().setAttribute("resetEmail", user.getEmail());
+        request.getSession().setAttribute("successMessage", "OTP sent to your email! ✅");
         request.getRequestDispatcher("verifyOTP.jsp").forward(request, response);
     }
 

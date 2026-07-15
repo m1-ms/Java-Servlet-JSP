@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            String query = "SELECT * FROM users WHERE email = ? OR username = ?";
+            String query = "SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR LOWER(username) = LOWER(?)";
             ps = connection.prepareStatement(query);
             ps.setString(1, identifier);
             ps.setString(2, identifier);
