@@ -367,5 +367,133 @@
 
   </div>
 
+
+	<%
+	    Boolean showDeleteOTPModal = (Boolean) session.getAttribute("showDeleteOTPModal");
+	    String deleteOtpError = (String) session.getAttribute("deleteOtpError");
+	    if (showDeleteOTPModal != null) session.removeAttribute("showDeleteOTPModal");
+	    if (deleteOtpError != null) session.removeAttribute("deleteOtpError");
+	%>
+	
+	<!-- Delete Account OTP Modal -->
+	<% if (showDeleteOTPModal != null && showDeleteOTPModal) { %>
+	<div id="deleteOtpModal" style="
+	    position: fixed; inset: 0;
+	    background: rgba(0,0,0,0.4);
+	    z-index: 300;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	">
+	    <div style="
+	        background: #fff;
+	        border-radius: 16px;
+	        padding: 32px;
+	        max-width: 360px;
+	        width: 90%;
+	        text-align: center;
+	        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+	    ">
+	        <div style="
+	            width: 48px; height: 48px; border-radius: 12px;
+	            background: #FAECE7; color: #993C1D;
+	            display: flex; align-items: center; justify-content: center;
+	            font-size: 22px; margin: 0 auto 16px;
+	        ">
+	            <i class="ti ti-user-x"></i>
+	        </div>
+	
+	        <p style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#1a1a1a; margin-bottom:8px;">
+	            Verify Account Deletion
+	        </p>
+	        <p style="font-size:13px; color:#888780; margin-bottom:20px;">
+	            Enter the 6-digit code sent to your email to confirm deletion
+	        </p>
+	
+	        <% if (deleteOtpError != null) { %>
+	        <div style="
+	            background: #FFF5F3; border: 0.5px solid rgba(216,90,48,0.2);
+	            border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+	            font-size: 12px; color: #993C1D;
+	            display: flex; align-items: center; gap: 8px;
+	        ">
+	            <i class="ti ti-alert-circle" style="font-size:16px"></i>
+	            <%= deleteOtpError %>
+	        </div>
+	        <% } %>
+	
+	        <form action="AuthController" method="post">
+	            <input type="hidden" name="action" value="verifyDeleteOTP">
+	            <input type="text" name="otp" maxlength="6"
+	                placeholder="000000"
+	                style="
+	                    width: 100%; height: 48px;
+	                    border: 0.5px solid rgba(0,0,0,0.15);
+	                    border-radius: 8px; padding: 0 14px;
+	                    font-size: 20px; text-align: center;
+	                    letter-spacing: 6px; color: #1a1a1a;
+	                    font-family: 'Inter', sans-serif;
+	                    outline: none; margin-bottom: 16px;
+	                " required>
+	
+	            <!-- عدد 5 دقايق -->
+	            <p style="font-size:12px; color:#888780; margin-bottom:16px;">
+	                Code expires in: <span id="deleteTimer" style="color:#993C1D; font-weight:600;">05:00</span>
+	            </p>
+	
+	            <button type="submit" style="
+	                width: 100%; height: 42px;
+	                border-radius: 8px; border: none;
+	                background: #C0392B; color: #fff;
+	                font-size: 14px; font-weight: 500;
+	                font-family: 'Inter', sans-serif;
+	                cursor: pointer; margin-bottom: 12px;
+	            ">
+	                <i class="ti ti-user-x"></i> Confirm Delete
+	            </button>
+	
+	            <button type="button" onclick="window.location.href='index.jsp'" style="
+	                width: 100%; height: 42px;
+	                border-radius: 8px;
+	                border: 0.5px solid rgba(0,0,0,0.15);
+	                background: #fff; color: #5F5E5A;
+	                font-size: 14px; font-weight: 500;
+	                font-family: 'Inter', sans-serif;
+	                cursor: pointer;
+	            ">
+	                Cancel
+	            </button>
+	        </form>
+	
+	        <!-- ReSend -->
+	        <p id="deleteResendText" style="font-size:12px; color:#888780; margin-top:12px; display:none;">
+	            Didn't receive the code?
+	            <a href="AuthController?action=deleteAccount" style="color:#993C1D; text-decoration:none; font-weight:500;">
+	                ReSend OTP
+	            </a>
+	        </p>
+	    </div>
+	</div>
+	
+	<script>
+	    let deleteSeconds = 300;
+	    const deleteTimer = document.getElementById('deleteTimer');
+	    const deleteResendText = document.getElementById('deleteResendText');
+	
+	    const deleteCountdown = setInterval(() => {
+	        deleteSeconds--;
+	        const m = Math.floor(deleteSeconds / 60).toString().padStart(2, '0');
+	        const s = (deleteSeconds % 60).toString().padStart(2, '0');
+	        deleteTimer.textContent = m + ':' + s;
+	
+	        if (deleteSeconds <= 0) {
+	            clearInterval(deleteCountdown);
+	            deleteTimer.textContent = '00:00';
+	            deleteResendText.style.display = 'block';
+	        }
+	    }, 1000);
+	</script>
+	<% } %>
+
 </body>
 </html>

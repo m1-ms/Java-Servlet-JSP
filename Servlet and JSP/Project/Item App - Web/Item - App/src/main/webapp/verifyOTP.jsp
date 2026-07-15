@@ -130,10 +130,10 @@
       <div class="field">
         <label for="otp">OTP Code</label>
         <input type="text" id="otp" name="otp" 
-               placeholder="000000" maxlength="6" required>
+               placeholder="" maxlength="6" required>
       </div>
 
-      <p class="hint">Didn't receive the code? <a href="forgotPassword.jsp" style="color:#3B4ED8; text-decoration:none;">Resend OTP</a></p>
+      <p class="hint">Didn't receive the code? <a href="forgotPassword.jsp" style="color:#3B4ED8; text-decoration:none;">ReSend OTP</a></p>
 
       <div class="divider"></div>
 

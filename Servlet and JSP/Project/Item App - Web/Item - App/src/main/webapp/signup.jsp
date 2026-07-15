@@ -256,5 +256,123 @@
 	});
 	</script>
 
+
+
+	<%
+	    Boolean showSignupOTPModal = (Boolean) session.getAttribute("showSignupOTPModal");
+	    String signupOtpError = (String) session.getAttribute("signupOtpError");
+	    if (showSignupOTPModal != null) session.removeAttribute("showSignupOTPModal");
+	    if (signupOtpError != null) session.removeAttribute("signupOtpError");
+	%>
+	
+	<!-- SignUp OTP Modal -->
+	<% if (showSignupOTPModal != null && showSignupOTPModal) { %>
+	<div style="
+	    position: fixed; inset: 0;
+	    background: rgba(0,0,0,0.4);
+	    z-index: 300;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	">
+	    <div style="
+	        background: #fff;
+	        border-radius: 16px;
+	        padding: 32px;
+	        max-width: 360px;
+	        width: 90%;
+	        text-align: center;
+	        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+	    ">
+	        <div style="
+	            width: 48px; height: 48px; border-radius: 12px;
+	            background: #E1F5EE; color: #0F6E56;
+	            display: flex; align-items: center; justify-content: center;
+	            font-size: 22px; margin: 0 auto 16px;
+	        ">
+	            <i class="ti ti-mail-check"></i>
+	        </div>
+	
+	        <p style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#1a1a1a; margin-bottom:8px;">
+	            Verify Your Email
+	        </p>
+	        <p style="font-size:13px; color:#888780; margin-bottom:20px;">
+	            Enter the 6-digit code sent to your email to complete signup
+	        </p>
+	
+	        <% if (signupOtpError != null) { %>
+	        <div style="
+	            background: #FFF5F3; border: 0.5px solid rgba(216,90,48,0.2);
+	            border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+	            font-size: 12px; color: #993C1D;
+	            display: flex; align-items: center; gap: 8px;
+	        ">
+	            <i class="ti ti-alert-circle" style="font-size:16px"></i>
+	            <%= signupOtpError %>
+	        </div>
+	        <% } %>
+	
+	        <form action="AuthController" method="post">
+	            <input type="hidden" name="action" value="verifySignupOTP">
+	            <input type="text" name="otp" maxlength="6"
+	                placeholder="000000"
+	                style="
+	                    width: 100%; height: 48px;
+	                    border: 0.5px solid rgba(0,0,0,0.15);
+	                    border-radius: 8px; padding: 0 14px;
+	                    font-size: 20px; text-align: center;
+	                    letter-spacing: 6px; color: #1a1a1a;
+	                    font-family: 'Inter', sans-serif;
+	                    outline: none; margin-bottom: 16px;
+	                " required>
+	
+	            <!-- عدد 5 دقايق -->
+	            <p style="font-size:12px; color:#888780; margin-bottom:16px;">
+	                Code expires in: <span id="signupTimer" style="color:#0F6E56; font-weight:600;">05:00</span>
+	            </p>
+	
+	            <button type="submit" style="
+	                width: 100%; height: 42px;
+	                border-radius: 8px; border: none;
+	                background: #0F6E56; color: #fff;
+	                font-size: 14px; font-weight: 500;
+	                font-family: 'Inter', sans-serif;
+	                cursor: pointer; margin-bottom: 12px;
+	            ">
+	                <i class="ti ti-check"></i> Verify & Create Account
+	            </button>
+	        </form>
+	
+	        <!-- ReSend -->
+	        <p id="signupResendText" style="font-size:12px; color:#888780; display:none;">
+	            Didn't receive the code?
+	            <a href="signup.jsp" style="color:#0F6E56; text-decoration:none; font-weight:500;">
+	                Go Back & Try Again
+	            </a>
+	        </p>
+	    </div>
+	</div>
+	
+	<script>
+	    let signupSeconds = 300;
+	    const signupTimer = document.getElementById('signupTimer');
+	    const signupResendText = document.getElementById('signupResendText');
+	
+	    const signupCountdown = setInterval(() => {
+	        signupSeconds--;
+	        const m = Math.floor(signupSeconds / 60).toString().padStart(2, '0');
+	        const s = (signupSeconds % 60).toString().padStart(2, '0');
+	        signupTimer.textContent = m + ':' + s;
+	
+	        if (signupSeconds <= 0) {
+	            clearInterval(signupCountdown);
+	            signupTimer.textContent = '00:00';
+	            signupResendText.style.display = 'block';
+	        }
+	    }, 1000);
+	</script>
+	<% } %>
+
+
 </body>
 </html>
