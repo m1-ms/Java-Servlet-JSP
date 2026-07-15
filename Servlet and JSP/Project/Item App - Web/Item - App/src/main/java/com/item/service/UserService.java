@@ -9,7 +9,13 @@ public interface UserService {
     
     boolean deleteAccount(long userID);
 
-    User verifyUser(String userName , String email , String phone);
     boolean updatePassword(long userId , String newPassword);
+    
+    User getUserByEmailOrUsername(String identifier);
+    
+    // Email Service OTP
+    boolean saveOTP(String email, int otp);
+    boolean verifyOTP(String email, int otp);
+    User getUserByEmail(String email);
     
 }

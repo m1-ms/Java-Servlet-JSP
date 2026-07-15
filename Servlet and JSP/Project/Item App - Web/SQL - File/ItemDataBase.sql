@@ -121,8 +121,10 @@ CREATE OR REPLACE TRIGGER trg_users_id
 /
 
 
+-- Email Service 
 
-
+ALTER TABLE users ADD otp NUMBER(6);
+ALTER TABLE users ADD otp_expiry TIMESTAMP;
 
 
 

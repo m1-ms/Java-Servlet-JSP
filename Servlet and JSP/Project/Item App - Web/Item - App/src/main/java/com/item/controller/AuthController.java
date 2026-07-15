@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import com.item.exception.DatabaseException;
 import com.item.model.User;
+import com.item.service.EmailService;
 import com.item.service.UserService;
 import com.item.service.impl.UserServiceImpl;
 
@@ -41,8 +42,11 @@ public class AuthController extends HttpServlet {
                 case "signup":        signup(request, response);        break;
                 case "logout":        logout(request, response);        break;
                 case "deleteAccount": deleteAccount(request, response); break;
-                case "verifyUser":    verifyUser(request, response);    break;
                 case "resetPassword": resetPassword(request, response); break;
+                
+                case "sendOTP":   sendOTP(request, response);   break;
+                case "verifyOTP": verifyOTP(request, response); break;
+                
                 default:
                     response.sendRedirect("login.jsp");
             }
@@ -202,27 +206,6 @@ public class AuthController extends HttpServlet {
     }
     
     
-    // Verify User
-    private void verifyUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String email    = request.getParameter("email");
-        String phone    = request.getParameter("phone");
-
-        User user = userService.verifyUser(username, email, phone);
-
-        if (user == null) {
-            request.setAttribute("errorMessage", "No account found with these details.");
-            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
-            return;
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute("resetUserId", user.getId());
-
-        session.setAttribute("successMessage", "Verify successfully! ✅ Please set your new password.");
-        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
-    }
-
     // Reset Password
     private void resetPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -255,5 +238,68 @@ public class AuthController extends HttpServlet {
         HttpSession resetSession = request.getSession();
         resetSession.setAttribute("successMessage", "Password reset successfully! ✅");
         response.sendRedirect(request.getContextPath() + "/login.jsp");
+    }
+    
+    
+ // Step 1 - Send OTP
+    private void sendOTP(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String identifier = request.getParameter("identifier");
+
+        if (identifier == null || identifier.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Email or UserName is required.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+
+        int otp = (int)(Math.random() * 900000) + 100000;
+
+        boolean saved = userService.saveOTP(identifier.trim(), otp);
+        if (!saved) {
+            request.setAttribute("errorMessage", "Email not found. Please try again.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            EmailService.sendOTP(identifier.trim(), String.valueOf(otp));
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Failed to send OTP. Please try again.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+
+        request.getSession().setAttribute("resetEmail", identifier.trim());
+        request.getSession().setAttribute("successMessage", "OTP sent to your email! Check your inbox ✅");
+        request.getRequestDispatcher("verifyOTP.jsp").forward(request, response);
+    }
+
+    // Step 2 - Verify OTP
+    private void verifyOTP(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        String email  = (String) session.getAttribute("resetEmail");
+        String otpStr = request.getParameter("otp");
+
+        if (otpStr == null || otpStr.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "OTP is required.");
+            request.getRequestDispatcher("verifyOTP.jsp").forward(request, response);
+            return;
+        }
+
+        boolean valid = userService.verifyOTP(email, Integer.parseInt(otpStr));
+        if (!valid) {
+            request.setAttribute("errorMessage", "Invalid or expired OTP. Please try again.");
+            request.getRequestDispatcher("verifyOTP.jsp").forward(request, response);
+            return;
+        }
+
+        User user = userService.getUserByEmail(email);
+        session.setAttribute("resetUserId", user.getId());
+        session.setAttribute("successMessage", "OTP verified successfully! ✅ Please set your new password.");
+
+        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
     }
 }

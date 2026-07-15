@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import com.item.exception.DatabaseException;
 import com.item.model.User;
+import com.item.service.EmailService;
 import com.item.service.UserService;
 
 public class UserServiceImpl implements UserService {
@@ -101,39 +102,6 @@ public class UserServiceImpl implements UserService {
             closeResources(connection, ps, null);
         }
     }
-    
-    
-    @Override
-    public User verifyUser(String username, String email, String phone) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            String query = "SELECT * FROM users WHERE username = ? AND email = ? AND phone = ?";
-            ps = connection.prepareStatement(query);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, phone);
-            resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                return new User(
-                    resultSet.getLong("ID"),
-                    resultSet.getString("FIRST_NAME"),
-                    resultSet.getString("LAST_NAME"),
-                    resultSet.getString("USERNAME"),
-                    resultSet.getString("EMAIL"),
-                    resultSet.getString("PHONE"),
-                    resultSet.getString("PASSWORD")
-                );
-            }
-        } catch (SQLException e) {
-        	throw new DatabaseException("Failed to verify user", e);
-        } finally {
-            closeResources(connection, ps, resultSet);
-        }
-        return null;
-    }
 
     @Override
     public boolean updatePassword(long userId, String newPassword) {
@@ -152,4 +120,103 @@ public class UserServiceImpl implements UserService {
             closeResources(connection, ps, null);
         }
     }
+    
+    @Override
+    public boolean saveOTP(String email, int otp) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = dataSource.getConnection();
+            String query = "UPDATE users SET otp = ?, otp_expiry = SYSTIMESTAMP + INTERVAL '5' MINUTE WHERE email = ?";
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, otp);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to save OTP", e);
+        } finally {
+            closeResources(connection, ps, null);
+        }
+    }
+
+    @Override
+    public boolean verifyOTP(String email, int otp) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            String query = "SELECT * FROM users WHERE email = ? AND otp = ? AND otp_expiry > SYSTIMESTAMP";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setInt(2, otp);
+            resultSet = ps.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to verify OTP", e);
+        } finally {
+            closeResources(connection, ps, resultSet);
+        }
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            ps = connection.prepareStatement("SELECT * FROM users WHERE email = ?");
+            ps.setString(1, email);
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getLong("ID"),
+                    resultSet.getString("FIRST_NAME"),
+                    resultSet.getString("LAST_NAME"),
+                    resultSet.getString("USERNAME"),
+                    resultSet.getString("EMAIL"),
+                    resultSet.getString("PHONE"),
+                    resultSet.getString("PASSWORD")
+                );
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to get user by email", e);
+        } finally {
+            closeResources(connection, ps, resultSet);
+        }
+        return null;
+    }
+
+    @Override
+    public User getUserByEmailOrUsername(String identifier) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            String query = "SELECT * FROM users WHERE email = ? OR username = ?";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, identifier);
+            ps.setString(2, identifier);
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getLong("ID"),
+                    resultSet.getString("FIRST_NAME"),
+                    resultSet.getString("LAST_NAME"),
+                    resultSet.getString("USERNAME"),
+                    resultSet.getString("EMAIL"),
+                    resultSet.getString("PHONE"),
+                    resultSet.getString("PASSWORD")
+                );
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to get user", e);
+        } finally {
+            closeResources(connection, ps, resultSet);
+        }
+        return null;
+    }
+    
 }
