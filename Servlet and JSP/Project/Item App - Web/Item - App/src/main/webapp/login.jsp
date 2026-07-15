@@ -211,12 +211,12 @@
       </button>
 
 	<p class="auth-link">
-  <a href="forgotPassword.jsp">Forgot your password?</a>
+  <a href="forgotPassword.jsp">Forgot your Password?</a>
 </p>
 
     </form>
 
-    <p class="auth-link">Don't have an account? <a href="signup.jsp">Sign up</a></p>
+    <p class="auth-link">Don't have an Account? <a href="signup.jsp">Sign Up</a></p>
 
   </div>
 
@@ -278,7 +278,7 @@
 	            Verify Your Identity
 	        </p>
 	        <p style="font-size:13px; color:#888780; margin-bottom:20px;">
-	            Enter the 6-digit code sent to your email
+	            Enter the 6-digit code sent to Your Email
 	        </p>
 	
 	        <% if (otpError != null) { %>
@@ -328,14 +328,14 @@
 	        <p id="resendText" style="font-size:12px; color:#888780; display:none;">
 	            Didn't receive the code?
 	            <a href="AuthController?action=resendLoginOTP" style="color:#3B4ED8; text-decoration:none; font-weight:500;">
-	                Resend OTP
+	                Re - Send OTP
 	            </a>
 	        </p>
 	    </div>
 	</div>
 	
 	<script>
-	    // عداد 5 دقايق
+	    // عدد 5 دقايق
 	    let seconds = 300;
 	    const timer = document.getElementById('timer');
 	    const resendText = document.getElementById('resendText');

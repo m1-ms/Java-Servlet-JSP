@@ -154,7 +154,7 @@
     <div class="card-top">
       <div class="card-icon"><i class="ti ti-user-plus"></i></div>
       <h1 class="card-title">Create <span>Account</span></h1>
-      <p class="card-sub">Fill in your details to get started</p>
+      <p class="card-sub">Fill in Your Details to get Started</p>
     </div>
 
     <% if (request.getAttribute("errorMessage") != null) { %>
@@ -169,29 +169,29 @@
 
       <div class="form-row">
         <div class="field no-margin">
-          <label for="firstName">First name</label>
-          <input type="text" id="firstName" name="firstName" placeholder="e.g." required>
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" placeholder="" required>
         </div>
         <div class="field no-margin">
-          <label for="lastName">Last name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="e.g." required>
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" placeholder="" required>
         </div>
       </div>
 
       <div class="form-row">
         <div class="field no-margin">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="e.g. userName" required>
+          <label for="username">UserName</label>
+          <input type="text" id="username" name="username" placeholder="" required>
         </div>
         <div class="field no-margin">
-          <label for="phone">Phone number</label>
-          <input type="text" id="phone" name="phone" placeholder="e.g. 01012345678">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" name="phone" placeholder="">
         </div>
       </div>
 
       <div class="field">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="e.g. mahmoud@email.com" required>
+        <input type="email" id="email" name="email" placeholder="" required>
       </div>
 
       <div class="form-row">
@@ -210,18 +210,18 @@
       <div class="terms">
         <input type="checkbox" id="terms" name="terms" required>
         <label for="terms">
-          I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
+          I Agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
         </label>
       </div>
 
       <button type="submit" class="btn-submit">
         <i class="ti ti-user-check" style="font-size:16px"></i>
-        Sign up
+        Sign Up
       </button>
 
     </form>
 
-    <p class="auth-link">Already have an account? <a href="login.jsp">Sign in</a></p>
+    <p class="auth-link">Already Have An Account? <a href="login.jsp">Sign In</a></p>
 
   </div>
 
@@ -297,7 +297,7 @@
 	            Verify Your Email
 	        </p>
 	        <p style="font-size:13px; color:#888780; margin-bottom:20px;">
-	            Enter the 6-digit code sent to your email to complete signup
+	            Enter the 6-digit Code Sent to Your Email to complete Sign Up
 	        </p>
 	
 	        <% if (signupOtpError != null) { %>
@@ -345,7 +345,7 @@
 	
 	        <!-- ReSend -->
 	        <p id="signupResendText" style="font-size:12px; color:#888780; display:none;">
-	            Didn't receive the code?
+	            Didn't receive the Code?
 	            <a href="signup.jsp" style="color:#0F6E56; text-decoration:none; font-weight:500;">
 	                Go Back & Try Again
 	            </a>

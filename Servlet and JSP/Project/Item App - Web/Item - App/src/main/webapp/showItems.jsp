@@ -203,7 +203,7 @@ if (successMessage != null) {
       </div>
       <a href="addItem.jsp" class="btn-add">
         <i class="ti ti-plus" style="font-size:15px"></i>
-        Add item
+        Add Item
       </a>
     </div>
 
@@ -224,7 +224,7 @@ if (successMessage != null) {
               <td colspan="5">
                 <div class="empty-state">
                   <i class="ti ti-inbox"></i>
-                  No items found.
+                  No Items Found.
                 </div>
               </td>
             </tr>
@@ -271,14 +271,13 @@ if (successMessage != null) {
     <div class="back-link">
       <a href="index.jsp">
         <i class="ti ti-arrow-left" style="font-size:15px"></i>
-        Back to home
+        Back to Home
       </a>
     </div>
 
   </div>
 
 
-		<!-- Delete Detail Dialog -->
 	<div id="deleteDetailOverlay" style="
 	    display: none;
 	    position: fixed; inset: 0;
@@ -305,7 +304,7 @@ if (successMessage != null) {
 	            Delete Details
 	        </p>
 	        <p id="deleteDetailMsg" style="font-size:13px; color:#888780; margin-bottom:24px;">
-	            Are you sure you want to delete details for this item?
+	            Are you sure you want to Delete Details for this Item?
 	        </p>
 	        <div style="display:flex; gap:12px; justify-content:center;">
 	            <button onclick="document.getElementById('deleteDetailOverlay').style.display='none'" style="

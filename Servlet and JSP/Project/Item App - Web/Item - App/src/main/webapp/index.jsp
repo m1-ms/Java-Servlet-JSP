@@ -277,15 +277,15 @@
       <div class="dialog-icon" style="background:#FAECE7; color:#993C1D;">
         <i class="ti ti-logout"></i>
       </div>
-      <p class="dialog-title">Logout</p>
-      <p class="dialog-sub">Are you sure you want to logout?</p>
+      <p class="dialog-title">Log Out</p>
+      <p class="dialog-sub">Are You Sure You Want to Log Out?</p>
       <div class="dialog-actions">
         <button class="btn-cancel" onclick="document.getElementById('logoutOverlay').classList.remove('visible')">
           Cancel
         </button>
         <a href="AuthController?action=logout" class="btn-confirm">
           <i class="ti ti-logout" style="font-size:14px"></i>
-          Yes, Logout
+          Yes, Log Out
         </a>
       </div>
     </div>
@@ -317,7 +317,7 @@
       <p class="welcome-label">Item Management System</p>
       <span class="welcome-hand">Welcome</span>
       <span class="welcome-app">Item App</span>
-      <p class="welcome-sub">Manage your inventory easily — add, view, edit, and remove items.</p>
+      <p class="welcome-sub">Manage your Inventory Easily — Add, View, Edit, and Remove Items.</p>
     </div>
 
     <div class="features-grid">
@@ -467,9 +467,9 @@
 	
 	        <!-- ReSend -->
 	        <p id="deleteResendText" style="font-size:12px; color:#888780; margin-top:12px; display:none;">
-	            Didn't receive the code?
+	            Didn't receive the Code?
 	            <a href="AuthController?action=deleteAccount" style="color:#993C1D; text-decoration:none; font-weight:500;">
-	                ReSend OTP
+	                Re - Send OTP
 	            </a>
 	        </p>
 	    </div>

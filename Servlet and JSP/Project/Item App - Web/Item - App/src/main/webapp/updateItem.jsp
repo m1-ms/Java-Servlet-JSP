@@ -167,7 +167,7 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
           </div>
         </div>
         <div class="field">
-          <label for="totalNumber">Total number</label>
+          <label for="totalNumber">Total Number</label>
           <input type="text" id="totalNumber" name="totalNumber" placeholder="e.g. 50" required>
         </div>
       </div>
@@ -178,16 +178,16 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
         <div style="display:flex; flex-direction:column; gap:8px;">
           <a href="index.jsp" class="btn-back">
             <i class="ti ti-home" style="font-size:16px"></i>
-            Back to home
+            Back to Home
           </a>
           <a href="ItemController?action=showItems" class="btn-back">
             <i class="ti ti-layout-list" style="font-size:16px"></i>
-            Back to items
+            Back to Items
           </a>
         </div>
         <button type="submit" class="btn-submit" id="saveBtn" style="display:none">
           <i class="ti ti-device-floppy" style="font-size:16px"></i>
-          Save changes
+          Save Changes
         </button>
       </div>
 

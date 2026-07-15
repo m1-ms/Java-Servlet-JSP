@@ -126,11 +126,11 @@
     </div>
 
     <h1 class="card-title">Oops! <span>Something went wrong</span></h1>
-    <p class="card-sub">An error occurred while processing your request.</p>
+    <p class="card-sub">An Error Occurred while processing Your Request.</p>
 
     <div class="error-msg-box">
       <i class="ti ti-info-circle"></i>
-      <span><%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "An unexpected error occurred. Please try again." %></span>
+      <span><%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "An unexpected error occurred. Please Try Again." %></span>
     </div>
 
     <div class="divider"></div>
@@ -138,7 +138,7 @@
     <div class="actions">
       <a href="javascript:history.back()" class="btn-back">
         <i class="ti ti-arrow-left" style="font-size:16px"></i>
-        Go back
+        Go Back
       </a>
       <a href="index.jsp" class="btn-home">
         <i class="ti ti-home" style="font-size:16px"></i>

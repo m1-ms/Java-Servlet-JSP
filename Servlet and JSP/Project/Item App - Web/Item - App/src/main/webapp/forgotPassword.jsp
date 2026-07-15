@@ -78,7 +78,7 @@
     <div class="card-top">
       <div class="card-icon"><i class="ti ti-lock-question"></i></div>
       <h1 class="card-title">Forgot <span>Password?</span></h1>
-      <p class="card-sub">Enter your details to verify your account</p>
+      <p class="card-sub">Enter your Details to Verify Your Account</p>
     </div>
 
     <% if (request.getAttribute("errorMessage") != null) { %>
@@ -102,7 +102,7 @@
       <div class="divider"></div>
       <div class="actions">
         <a href="login.jsp" class="btn-back">
-          <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to login
+          <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to Log In
         </a>
         <button type="submit" class="btn-submit">
           <i class="ti ti-check" style="font-size:15px"></i> Verify

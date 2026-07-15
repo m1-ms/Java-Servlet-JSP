@@ -201,7 +201,7 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
     <div class="field">
       <label for="itemSelect">Select Item</label>
       <select id="itemSelect" onchange="onItemSelect(this)">
-        <option value="">-- Choose an item --</option>
+        <option value="">-- Choose an Item --</option>
         <% if (items != null) { %>
           <% for (Item item : items) { %>
             <option value="<%= item.getId() %>"
@@ -242,7 +242,7 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
     <div class="confirm-section" id="confirmSection">
       <div class="confirm-msg">
         <i class="ti ti-alert-triangle"></i>
-        Are you sure you want to delete this item? This action cannot be undone.
+        Are you sure you want to delete this Item? This action cannot be undone.
       </div>
 
       <div class="divider"></div>
@@ -252,7 +252,7 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
           <i class="ti ti-x" style="font-size:16px"></i> Cancel
         </button>
         <a id="deleteBtn" href="#" class="btn-delete">
-          <i class="ti ti-trash" style="font-size:16px"></i> Delete item
+          <i class="ti ti-trash" style="font-size:16px"></i> Delete Item
         </a>
       </div>
     </div>
@@ -261,11 +261,11 @@ List<Item> items = (List<Item>) request.getAttribute("itemsData");
     <div class="always-back">
       <a href="index.jsp">
         <i class="ti ti-home" style="font-size:15px"></i>
-        Back to home
+        Back to Home
       </a>
       <a href="ItemController?action=showItems">
         <i class="ti ti-layout-list" style="font-size:15px"></i>
-        Back to items
+        Back to Items
       </a>
     </div>
 

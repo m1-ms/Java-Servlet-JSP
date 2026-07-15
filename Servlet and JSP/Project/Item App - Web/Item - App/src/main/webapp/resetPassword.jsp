@@ -103,7 +103,7 @@
     <div class="card-top">
       <div class="card-icon"><i class="ti ti-lock-check"></i></div>
       <h1 class="card-title">Reset <span>Password</span></h1>
-      <p class="card-sub">Enter your new password</p>
+      <p class="card-sub">Enter Your New Password</p>
     </div>
 
     <% if (request.getAttribute("errorMessage") != null) { %>
@@ -135,7 +135,7 @@
       <div class="divider"></div>
       <div class="actions">
         <a href="login.jsp" class="btn-back">
-          <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to login
+          <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to Log In
         </a>
         <button type="submit" class="btn-submit">
           <i class="ti ti-lock-check" style="font-size:15px"></i> Reset Password

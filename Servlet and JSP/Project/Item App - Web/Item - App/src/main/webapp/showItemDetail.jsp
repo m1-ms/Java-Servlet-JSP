@@ -107,7 +107,6 @@
       </div>
     </div>
 
-    <!-- Details -->
     <div class="detail-field">
       <p class="detail-label">Description</p>
       <p class="detail-value"><%= detail.getDescription() != null ? detail.getDescription() : "—" %></p>
@@ -121,7 +120,7 @@
 
     <div class="actions">
       <a href="ItemController?action=showItems" class="btn-back">
-        <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to items
+        <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to Items
       </a>
       <a href="ItemController?action=showUpdateDetailPage&id=<%= item.getId() %>" class="btn-update">
         <i class="ti ti-file-pencil" style="font-size:14px"></i> Update Details

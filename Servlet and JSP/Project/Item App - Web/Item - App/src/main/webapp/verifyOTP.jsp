@@ -107,7 +107,7 @@
     <div class="card-top">
       <div class="card-icon"><i class="ti ti-mail-check"></i></div>
       <h1 class="card-title">Verify <span>OTP</span></h1>
-      <p class="card-sub">Enter the 6-digit code sent to your email</p>
+      <p class="card-sub">Enter the 6-digit code sent to Your Email</p>
     </div>
 
     <% if (successMessage != null) { %>
@@ -133,7 +133,7 @@
                placeholder="" maxlength="6" required>
       </div>
 
-      <p class="hint">Didn't receive the code? <a href="forgotPassword.jsp" style="color:#3B4ED8; text-decoration:none;">ReSend OTP</a></p>
+      <p class="hint">Didn't Receive the Code? <a href="forgotPassword.jsp" style="color:#3B4ED8; text-decoration:none;">Re - Send OTP</a></p>
 
       <div class="divider"></div>
 
