@@ -47,6 +47,8 @@ public class AuthController extends HttpServlet {
                 case "sendOTP":   sendOTP(request, response);   break;
                 case "verifyOTP": verifyOTP(request, response); break;
                 
+                case "verifyLoginOTP": verifyLoginOTP(request, response); break;
+                
                 default:
                     response.sendRedirect("login.jsp");
             }
@@ -64,7 +66,9 @@ public class AuthController extends HttpServlet {
     }
     
     // Login
-    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void login(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -83,20 +87,57 @@ public class AuthController extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response); return;
         }
 
+        int otp = (int)(Math.random() * 900000) + 100000;
+        userService.saveOTP(user.getEmail(), otp);
+        
+        try {
+            EmailService.sendOTP(user.getEmail(), String.valueOf(otp));
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Failed to send OTP. Please try again.");
+            request.getRequestDispatcher("login.jsp").forward(request, response); return;
+        }
+
         HttpSession session = request.getSession();
-        session.setAttribute("loggedUser", user);
+        session.setAttribute("pendingUser", user);
+        session.setAttribute("showOTPModal", true);
 
-
-        // Cookie
         Cookie usernameCookie = new Cookie("rememberedUsername", username);
         usernameCookie.setMaxAge(2 * 24 * 60 * 60);
         usernameCookie.setPath("/");
         response.addCookie(usernameCookie);
 
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+    }
+    
+    
+    private void verifyLoginOTP(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        User pendingUser = (User) session.getAttribute("pendingUser");
+        String otpStr = request.getParameter("otp");
+
+        if (pendingUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        boolean valid = userService.verifyOTP(pendingUser.getEmail(), Integer.parseInt(otpStr));
+        if (!valid) {
+            session.setAttribute("otpError", "Invalid or expired OTP. Please try again.");
+            session.setAttribute("showOTPModal", true);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
+        session.removeAttribute("pendingUser");
+        session.removeAttribute("showOTPModal");
+        session.setAttribute("loggedUser", pendingUser);
         session.setAttribute("successMessage", "Welcome back! 👋");
-        // Redirect
+
         response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
+    
 
     // Sign up
     private void signup(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
