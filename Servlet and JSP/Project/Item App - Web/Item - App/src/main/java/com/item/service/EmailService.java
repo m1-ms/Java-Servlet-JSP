@@ -7,8 +7,8 @@ import java.io.UnsupportedEncodingException;
 
 public class EmailService {
 
-    private static final String FROM_EMAIL = "mahmoudsliman060@gmail.com";
-    private static final String PASSWORD   = "ctkx pblh axvo iadg";
+    private static final String FROM_EMAIL = "dv.ma7moud@gmail.com";
+    private static final String PASSWORD   = "spvb rfld ozog xgxp";
 
     public static void sendOTP(String toEmail, String otp) throws MessagingException, UnsupportedEncodingException {
 
